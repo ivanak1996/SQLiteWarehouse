@@ -61,6 +61,9 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Misc\TabControlEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Service\WarehouseService.cs" />
     <Compile Include="Models\Customers.cs" />
     <Compile Include="Models\DocTypes.cs" />

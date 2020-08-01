@@ -3,6 +3,7 @@ using SQLiteXP.Models;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace SQLiteXP
 {
@@ -69,12 +70,29 @@ namespace SQLiteXP
         private void FocusMainPanel()
         {
             IList<string> docTypes = WarehouseService.GetDocTypesNames();
-            dokumentiToolStripMenuItem1.DropDownItems.Clear();
+            dokumentiToolStripMenuItem.DropDownItems.Clear();
             foreach (var dt in docTypes)
             {
-                dokumentiToolStripMenuItem1.DropDownItems.Add(dt);
+                ToolStripMenuItem menu = new ToolStripMenuItem(dt);
+                menu.Click += new EventHandler(menu_Click);
+                dokumentiToolStripMenuItem.DropDownItems.Add(menu);
             }
             panels[panel_main].BringToFront();
+        }
+
+        void menu_Click(object sender, EventArgs e)
+        {
+            var menuItem = sender as ToolStripMenuItem;
+            var menuText = menuItem.Text;
+
+            foreach(TabPage page in tabControl_documents.TabPages)
+            {
+                if (page.Text == menuText)
+                {
+                    return;
+                }
+            }
+            tabControl_documents.TabPages.Add(menuText);
         }
 
         private void logoutToolStripMenuItem_Click(object sender, EventArgs e)

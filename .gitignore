@@ -1,0 +1,11 @@
+*.cache
+*.dll
+*.exe
+*.pdb
+/build/
+*.suo
+*.user
+*.sdf
+*.opensdf
+*.tlog
+*.log

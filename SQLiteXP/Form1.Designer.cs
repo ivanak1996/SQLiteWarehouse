@@ -37,7 +37,7 @@ namespace SQLiteXP
             this.kupciToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sinhronizacijaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dokumentiToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.dokumentiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.izvestajiToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.zalihaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.prometToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,6 +46,7 @@ namespace SQLiteXP
             this.button_login = new System.Windows.Forms.Button();
             this.textBox_username = new System.Windows.Forms.TextBox();
             this.textBox_pwd = new System.Windows.Forms.TextBox();
+            this.tabControl_documents = new SQLiteXP.Misc.TabControlEx();
             this.tableLayoutPanel_main.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.tableLayoutPanel_login.SuspendLayout();
@@ -57,6 +58,7 @@ namespace SQLiteXP
             this.tableLayoutPanel_main.ColumnCount = 1;
             this.tableLayoutPanel_main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel_main.Controls.Add(this.menuStrip2, 0, 0);
+            this.tableLayoutPanel_main.Controls.Add(this.tabControl_documents, 0, 1);
             this.tableLayoutPanel_main.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel_main.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel_main.Name = "tableLayoutPanel_main";
@@ -72,7 +74,7 @@ namespace SQLiteXP
             this.menuStrip2.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.podesavanjaToolStripMenuItem,
-            this.dokumentiToolStripMenuItem1,
+            this.dokumentiToolStripMenuItem,
             this.izvestajiToolStripMenuItem1});
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
@@ -118,11 +120,11 @@ namespace SQLiteXP
             this.logoutToolStripMenuItem.Text = "Logout";
             this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
             // 
-            // dokumentiToolStripMenuItem1
+            // dokumentiToolStripMenuItem
             // 
-            this.dokumentiToolStripMenuItem1.Name = "dokumentiToolStripMenuItem1";
-            this.dokumentiToolStripMenuItem1.Size = new System.Drawing.Size(118, 29);
-            this.dokumentiToolStripMenuItem1.Text = "Dokumenti";
+            this.dokumentiToolStripMenuItem.Name = "dokumentiToolStripMenuItem";
+            this.dokumentiToolStripMenuItem.Size = new System.Drawing.Size(118, 29);
+            this.dokumentiToolStripMenuItem.Text = "Dokumenti";
             // 
             // izvestajiToolStripMenuItem1
             // 
@@ -213,6 +215,18 @@ namespace SQLiteXP
             this.textBox_pwd.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.textBox_pwd.UseSystemPasswordChar = true;
             // 
+            // tabControl_documents
+            // 
+            this.tabControl_documents.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl_documents.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
+            this.tabControl_documents.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabControl_documents.Location = new System.Drawing.Point(3, 53);
+            this.tabControl_documents.Name = "tabControl_documents";
+            this.tabControl_documents.Padding = new System.Drawing.Point(10, 5);
+            this.tabControl_documents.SelectedIndex = 0;
+            this.tabControl_documents.Size = new System.Drawing.Size(794, 394);
+            this.tabControl_documents.TabIndex = 1;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -251,11 +265,12 @@ namespace SQLiteXP
         private System.Windows.Forms.ToolStripMenuItem kupciToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sinhronizacijaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem logoutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem dokumentiToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem dokumentiToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem izvestajiToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem zalihaToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem prometToolStripMenuItem1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private Misc.TabControlEx tabControl_documents;
     }
 }
 
