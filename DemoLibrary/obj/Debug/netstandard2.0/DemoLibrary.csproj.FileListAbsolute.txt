@@ -1,0 +1,9 @@
+C:\Users\ivana\source\repos\SQLiteXP\DemoLibrary\bin\Debug\netstandard2.0\DemoLibrary.deps.json
+C:\Users\ivana\source\repos\SQLiteXP\DemoLibrary\bin\Debug\netstandard2.0\DemoLibrary.dll
+C:\Users\ivana\source\repos\SQLiteXP\DemoLibrary\bin\Debug\netstandard2.0\DemoLibrary.pdb
+C:\Users\ivana\source\repos\SQLiteXP\DemoLibrary\obj\Debug\netstandard2.0\DemoLibrary.csprojAssemblyReference.cache
+C:\Users\ivana\source\repos\SQLiteXP\DemoLibrary\obj\Debug\netstandard2.0\DemoLibrary.csproj.CoreCompileInputs.cache
+C:\Users\ivana\source\repos\SQLiteXP\DemoLibrary\obj\Debug\netstandard2.0\DemoLibrary.AssemblyInfoInputs.cache
+C:\Users\ivana\source\repos\SQLiteXP\DemoLibrary\obj\Debug\netstandard2.0\DemoLibrary.AssemblyInfo.cs
+C:\Users\ivana\source\repos\SQLiteXP\DemoLibrary\obj\Debug\netstandard2.0\DemoLibrary.dll
+C:\Users\ivana\source\repos\SQLiteXP\DemoLibrary\obj\Debug\netstandard2.0\DemoLibrary.pdb
