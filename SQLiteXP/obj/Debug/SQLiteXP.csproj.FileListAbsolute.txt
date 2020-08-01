@@ -1,4 +1,3 @@
-C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\bin\Debug\PeopleDb.db
 C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\bin\Debug\SQLiteXP.exe
 C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\bin\Debug\SQLiteXP.pdb
 C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\bin\Debug\Dapper.dll
