@@ -64,6 +64,8 @@
     <Compile Include="Misc\TabControlEx.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Models\DocHeader.cs" />
+    <Compile Include="Models\DocItems.cs" />
     <Compile Include="Service\WarehouseService.cs" />
     <Compile Include="Models\Customers.cs" />
     <Compile Include="Models\DocTypes.cs" />

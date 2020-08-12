@@ -51,6 +51,8 @@ namespace SQLiteXP
 
             if (loggedInUser != null) 
             {
+                // initial sync
+                WarehouseService.SyncData(loggedInUser.user, loggedInUser.pass);
                 FocusMainPanel();
             }
             else
@@ -107,7 +109,10 @@ namespace SQLiteXP
         {
             if(WarehouseService.SyncData(loggedInUser.user, loggedInUser.pass))
             {
-
+                string message = "Zavrsena sinhronizacija";
+                string caption = "Obavestenje";
+                MessageBoxButtons buttons = MessageBoxButtons.OK;
+                MessageBox.Show(message, caption, buttons);
             }
             else
             {

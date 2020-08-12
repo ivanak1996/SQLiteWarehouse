@@ -146,21 +146,21 @@ namespace SQLiteXP.Database
                     cmd.CommandText = "DROP TABLE IF EXISTS Settings";
                     cmd.ExecuteNonQuery();
 
-                    cmd.CommandText = @"CREATE TABLE Settings(id INTEGER PRIMARY KEY NOT NULL,
+                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Settings(id INTEGER PRIMARY KEY NOT NULL,
                     user TEXT, pass TEXT, acDocType VARCHAR(4), acWarehouse VARCHAR(30))";
                     cmd.ExecuteNonQuery();
 
                     cmd.CommandText = "DROP TABLE IF EXISTS Users";
                     cmd.ExecuteNonQuery();
 
-                    cmd.CommandText = @"CREATE TABLE Users(id INTEGER PRIMARY KEY NOT NULL,
+                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY NOT NULL,
                     user TEXT, pass varchar(5), loggedIn INT)";
                     cmd.ExecuteNonQuery();
 
                     cmd.CommandText = "DROP TABLE IF EXISTS Products";
                     cmd.ExecuteNonQuery();
 
-                    cmd.CommandText = @"CREATE TABLE Products (id INTEGER PRIMARY KEY NOT NULL,
+                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Products (id INTEGER PRIMARY KEY NOT NULL,
                     acIdent varchar(16), acName VARCHAR(250),acUM VARCHAR(3),anVat FLOAT,anSalePrice FLOAT,
                     anRtPrice FLOAT, anPluCode INT, acBarCode VARCHAR(100))";
                     cmd.ExecuteNonQuery();
@@ -168,7 +168,7 @@ namespace SQLiteXP.Database
                     cmd.CommandText = "DROP TABLE IF EXISTS Customers";
                     cmd.ExecuteNonQuery();
 
-                    cmd.CommandText = @"CREATE TABLE Customers (id INTEGER PRIMARY KEY NOT NULL,
+                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Customers (id INTEGER PRIMARY KEY NOT NULL,
                     acSubject varchar(30), acName2 VARCHAR(250),acAddress VARCHAR(250),acPost VARCHAR(10),
                     acCity varchar(250), acCode varchar(20), acRegNo  varchar(20), anRebate decimal(19,6),
                     anDaysForPayment INT)";
@@ -177,23 +177,40 @@ namespace SQLiteXP.Database
                     cmd.CommandText = "DROP TABLE IF EXISTS Stock";
                     cmd.ExecuteNonQuery();
 
-                    cmd.CommandText = @"CREATE TABLE Stock (id INTEGER PRIMARY KEY NOT NULL,
+                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Stock (id INTEGER PRIMARY KEY NOT NULL,
                     acWarehouse varchar(30), acIdent VARCHAR(16),anStock decimal(19, 6))";
                     cmd.ExecuteNonQuery();
 
                     cmd.CommandText = "DROP TABLE IF EXISTS DocTypes";
                     cmd.ExecuteNonQuery();
 
-                    cmd.CommandText = @"CREATE TABLE DocTypes(id INTEGER PRIMARY KEY NOT NULL,
+                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS DocTypes(id INTEGER PRIMARY KEY NOT NULL,
                     acDocType varchar(4), acName VARCHAR(250),anType varchar(4))";
                     cmd.ExecuteNonQuery();
 
                     cmd.CommandText = "DROP TABLE IF EXISTS Pricebooks";
                     cmd.ExecuteNonQuery();
 
-                    cmd.CommandText = @"CREATE TABLE Pricebooks (id INTEGER PRIMARY KEY NOT NULL,
+                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Pricebooks (id INTEGER PRIMARY KEY NOT NULL,
                     acIdent VARCHAR(16), acSubject varchar(30),anSalePrice FLOAT, anRtPrice FLOAT, anRebate  decimal(19,6), 
                     adDateStart TEXT, adDateEnd TEXT)";
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = "DROP TABLE IF EXISTS DocHeader";
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = @" CREATE TABLE IF NOT EXISTS DocHeader (id INTEGER PRIMARY KEY NOT NULL,acKey varchar(13),
+                    acDocType varchar(4), adDate date,acReceiver  varchar(30), acPrsn3 varchar(30),acStatus varchar(1),
+                    acPosted varchar(1),acName2 varchar(250),acAddress varchar(250),acPost varchar(250),acCity varchar(250),
+                    acCountry varchar(250),anClerk int,anUserIns int,anUserChg int,adTimeIns datetime,adTimeChg datetime)";
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = "DROP TABLE IF EXISTS DocItems";
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = @" CREATE TABLE IF NOT EXISTS DocItems (id INTEGER PRIMARY KEY NOT NULL, acKey varchar(13),anNo int ,
+                    acIdent varchar(16), acName varchar(250),anQty decimal(19,6),anPrice decimal(19,6),
+                    anRebate decimal(19,6),anVat decimal(19,6),acVatCode varchar(2),acUM varchar(10))";
                     cmd.ExecuteNonQuery();
 
                 }
