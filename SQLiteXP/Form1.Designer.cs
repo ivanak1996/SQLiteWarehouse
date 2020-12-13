@@ -41,12 +41,13 @@ namespace SQLiteXP
             this.izvestajiToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.zalihaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.prometToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabControl_documents = new SQLiteXP.Misc.TabControlEx();
             this.tableLayoutPanel_login = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.button_login = new System.Windows.Forms.Button();
             this.textBox_username = new System.Windows.Forms.TextBox();
             this.textBox_pwd = new System.Windows.Forms.TextBox();
-            this.tabControl_documents = new SQLiteXP.Misc.TabControlEx();
+            this.racunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel_main.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.tableLayoutPanel_login.SuspendLayout();
@@ -65,7 +66,7 @@ namespace SQLiteXP
             this.tableLayoutPanel_main.RowCount = 2;
             this.tableLayoutPanel_main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel_main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel_main.Size = new System.Drawing.Size(800, 450);
+            this.tableLayoutPanel_main.Size = new System.Drawing.Size(640, 360);
             this.tableLayoutPanel_main.TabIndex = 1;
             // 
             // menuStrip2
@@ -75,10 +76,11 @@ namespace SQLiteXP
             this.menuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.podesavanjaToolStripMenuItem,
             this.dokumentiToolStripMenuItem,
-            this.izvestajiToolStripMenuItem1});
+            this.izvestajiToolStripMenuItem1,
+            this.racunToolStripMenuItem});
             this.menuStrip2.Location = new System.Drawing.Point(0, 0);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(800, 33);
+            this.menuStrip2.Size = new System.Drawing.Size(640, 33);
             this.menuStrip2.TabIndex = 0;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -105,6 +107,7 @@ namespace SQLiteXP
             this.kupciToolStripMenuItem.Name = "kupciToolStripMenuItem";
             this.kupciToolStripMenuItem.Size = new System.Drawing.Size(217, 30);
             this.kupciToolStripMenuItem.Text = "Kupci";
+            this.kupciToolStripMenuItem.Click += new System.EventHandler(this.kupciToolStripMenuItem_Click);
             // 
             // sinhronizacijaToolStripMenuItem
             // 
@@ -140,12 +143,25 @@ namespace SQLiteXP
             this.zalihaToolStripMenuItem1.Name = "zalihaToolStripMenuItem1";
             this.zalihaToolStripMenuItem1.Size = new System.Drawing.Size(159, 30);
             this.zalihaToolStripMenuItem1.Text = "Zaliha";
+            this.zalihaToolStripMenuItem1.Click += new System.EventHandler(this.zalihaToolStripMenuItem1_Click);
             // 
             // prometToolStripMenuItem1
             // 
             this.prometToolStripMenuItem1.Name = "prometToolStripMenuItem1";
             this.prometToolStripMenuItem1.Size = new System.Drawing.Size(159, 30);
             this.prometToolStripMenuItem1.Text = "Promet";
+            // 
+            // tabControl_documents
+            // 
+            this.tabControl_documents.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl_documents.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
+            this.tabControl_documents.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabControl_documents.Location = new System.Drawing.Point(3, 53);
+            this.tabControl_documents.Name = "tabControl_documents";
+            this.tabControl_documents.Padding = new System.Drawing.Point(10, 5);
+            this.tabControl_documents.SelectedIndex = 0;
+            this.tabControl_documents.Size = new System.Drawing.Size(634, 304);
+            this.tabControl_documents.TabIndex = 1;
             // 
             // tableLayoutPanel_login
             // 
@@ -161,7 +177,7 @@ namespace SQLiteXP
             this.tableLayoutPanel_login.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 28.48102F));
             this.tableLayoutPanel_login.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 43.03797F));
             this.tableLayoutPanel_login.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 28.48101F));
-            this.tableLayoutPanel_login.Size = new System.Drawing.Size(800, 450);
+            this.tableLayoutPanel_login.Size = new System.Drawing.Size(640, 360);
             this.tableLayoutPanel_login.TabIndex = 7;
             // 
             // tableLayoutPanel1
@@ -172,13 +188,13 @@ namespace SQLiteXP
             this.tableLayoutPanel1.Controls.Add(this.textBox_username, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.textBox_pwd, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(260, 131);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(208, 105);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(279, 187);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(222, 148);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
             // button_login
@@ -186,7 +202,7 @@ namespace SQLiteXP
             this.button_login.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.button_login.AutoSize = true;
             this.button_login.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_login.Location = new System.Drawing.Point(68, 83);
+            this.button_login.Location = new System.Drawing.Point(39, 83);
             this.button_login.Name = "button_login";
             this.button_login.Size = new System.Drawing.Size(143, 35);
             this.button_login.TabIndex = 2;
@@ -198,9 +214,9 @@ namespace SQLiteXP
             // 
             this.textBox_username.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.textBox_username.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox_username.Location = new System.Drawing.Point(15, 6);
+            this.textBox_username.Location = new System.Drawing.Point(3, 6);
             this.textBox_username.Name = "textBox_username";
-            this.textBox_username.Size = new System.Drawing.Size(249, 28);
+            this.textBox_username.Size = new System.Drawing.Size(216, 28);
             this.textBox_username.TabIndex = 1;
             this.textBox_username.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -208,30 +224,18 @@ namespace SQLiteXP
             // 
             this.textBox_pwd.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.textBox_pwd.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox_pwd.Location = new System.Drawing.Point(16, 46);
+            this.textBox_pwd.Location = new System.Drawing.Point(3, 46);
             this.textBox_pwd.Name = "textBox_pwd";
-            this.textBox_pwd.Size = new System.Drawing.Size(246, 28);
+            this.textBox_pwd.Size = new System.Drawing.Size(216, 28);
             this.textBox_pwd.TabIndex = 0;
             this.textBox_pwd.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.textBox_pwd.UseSystemPasswordChar = true;
-            // 
-            // tabControl_documents
-            // 
-            this.tabControl_documents.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl_documents.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
-            this.tabControl_documents.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabControl_documents.Location = new System.Drawing.Point(3, 53);
-            this.tabControl_documents.Name = "tabControl_documents";
-            this.tabControl_documents.Padding = new System.Drawing.Point(10, 5);
-            this.tabControl_documents.SelectedIndex = 0;
-            this.tabControl_documents.Size = new System.Drawing.Size(794, 394);
-            this.tabControl_documents.TabIndex = 1;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(640, 360);
             this.Controls.Add(this.tableLayoutPanel_main);
             this.Controls.Add(this.tableLayoutPanel_login);
             this.Name = "Form1";
@@ -271,6 +275,7 @@ namespace SQLiteXP
         private System.Windows.Forms.ToolStripMenuItem prometToolStripMenuItem1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private Misc.TabControlEx tabControl_documents;
+        private System.Windows.Forms.ToolStripMenuItem racunToolStripMenuItem;
     }
 }
 

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SQLiteXP.Database;
 using SQLiteXP.Models;
+using SQLiteXP.Models.Billing;
 using SQLiteXP.Web;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,21 @@ namespace SQLiteXP.Service
             return SQLiteDataAccess.GetAll<Products>();
         }
 
+        public static Bill GetOpenBill()
+        {
+            return SQLiteDataAccess.GetOpenBill();
+        }
+
+        public static List<StockWithProductInfo> GetStockWithProductInfo()
+        {
+            return SQLiteDataAccess.GetAll<StockWithProductInfo>();
+        }
+
+        public static List<Buyers> GetBuyers()
+        {
+            return SQLiteDataAccess.GetAll<Buyers>();
+        }
+
         public static List<Products> GetFilteredProducts(string column, string criteria)
         {
             return SQLiteDataAccess.GetFilteredProducts(column, criteria);
@@ -40,10 +56,14 @@ namespace SQLiteXP.Service
             try
             {
                 var products = GetProductsFromAPI(userName, userPass);
+                var stock = GetStockFromAPI(userName, userPass);
+                var buyers = GetBuyersFromAPI(userName, userPass);
                 var docs = GetDocTypesFromAPI(userName, userPass);
                 RecreateDb();
                 SQLiteDataAccess.SaveProducts(products);
+                SQLiteDataAccess.SaveBuyers(buyers);
                 SQLiteDataAccess.SaveDocTypes(docs);
+                SQLiteDataAccess.SaveStockWithProductInfo(stock, products);
             }
             catch (Exception)
             {
@@ -51,6 +71,7 @@ namespace SQLiteXP.Service
             }
             return true;
         }
+
         public static List<string> GetDocTypesNames()
         {
             List<DocTypes> docTypes = SQLiteDataAccess.GetAll<DocTypes>();
@@ -89,11 +110,20 @@ namespace SQLiteXP.Service
             return JSONParser.GetProducts(userEmail, userPass);
         }
 
+        private static List<Buyers> GetBuyersFromAPI(string userEmail, string userPass)
+        {
+            return JSONParser.GetBuyers(userEmail, userPass);
+        }
+
         private static List<DocTypes> GetDocTypesFromAPI(string userEmail, string userPass)
         {
             return JSONParser.GetDocTypes(userEmail, userPass);
         }
 
+        private static List<Stock> GetStockFromAPI(string userName, string userPass)
+        {
+            return JSONParser.GetStock(userName, userPass);
+        }
 
         public static void Logout()
         {

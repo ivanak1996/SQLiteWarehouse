@@ -122,5 +122,18 @@ namespace SQLiteXP
                 MessageBox.Show(message, caption, buttons);
             }
         }
+
+        private void kupciToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new BuyersListForm();
+            form.Show();
+        }
+
+        private void zalihaToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var form = new StockListForm();
+            form.Show();
+        }
+
     }
 }

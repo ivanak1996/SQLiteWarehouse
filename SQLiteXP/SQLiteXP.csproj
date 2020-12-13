@@ -54,6 +54,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuyersListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuyersListForm.Designer.cs">
+      <DependentUpon>BuyersListForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Database\SQLiteDataAccess.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -64,10 +70,13 @@
     <Compile Include="Misc\TabControlEx.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Models\Billing\Bill.cs" />
+    <Compile Include="Models\Billing\BillItem.cs" />
     <Compile Include="Models\DocHeader.cs" />
     <Compile Include="Models\DocItems.cs" />
+    <Compile Include="Models\StockWithProductInfo.cs" />
     <Compile Include="Service\WarehouseService.cs" />
-    <Compile Include="Models\Customers.cs" />
+    <Compile Include="Models\Buyers.cs" />
     <Compile Include="Models\DocTypes.cs" />
     <Compile Include="Models\Pricebooks.cs" />
     <Compile Include="Models\Products.cs" />
@@ -82,7 +91,16 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StockListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StockListForm.Designer.cs">
+      <DependentUpon>StockListForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Web\JSONParser.cs" />
+    <EmbeddedResource Include="BuyersListForm.resx">
+      <DependentUpon>BuyersListForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -97,7 +115,11 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="StockListForm.resx">
+      <DependentUpon>StockListForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -109,7 +131,18 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\search_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\search_icon_png.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\search_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\search_icon1.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.113.1\build\net20\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.113.1\build\net20\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

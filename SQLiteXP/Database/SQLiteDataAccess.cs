@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using Dapper;
 using SQLiteXP.Models;
+using SQLiteXP.Models.Billing;
 
 namespace SQLiteXP.Database
 {
@@ -43,6 +45,67 @@ namespace SQLiteXP.Database
 
         #endregion
 
+        #region billing
+
+        internal static Bill GetOpenBill()
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
+            {
+                string processQuery = $"select * from Bill where status='{Bill.STATUS_OPEN}'";
+                var openBill = cnn.Query<Bill>(processQuery, new DynamicParameters()).FirstOrDefault();
+                if (openBill != null)
+                {
+                    processQuery = $"select * from BillItem where billId={openBill.Id}";
+                    openBill.Items = cnn.Query<BillItem>(processQuery, new DynamicParameters()).ToList();
+                }
+                else
+                {
+                    openBill = new Bill()
+                    {
+                        Status = Bill.STATUS_OPEN
+                    };
+                    cnn.Execute("insert into Bill (DateCreated, status) values (@DateCreated, @status)", openBill);
+                }
+                return openBill;
+            }
+        }
+
+        internal static void InsertBill(Bill bill)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
+            {
+                cnn.Execute("insert into Bill (DateCreated) values (@DateCreated)", bill);
+            }
+        }
+
+        internal static void InsertBillItem(BillItem billItem)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
+            {
+                var query = GetGenericQueryString(billItem);
+                cnn.Execute(query, billItem);
+            }
+        }
+
+        internal static void DeleteItem(BillItem item)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
+            {
+                cnn.Execute($"delete from BillItem" +
+                    $" where productIdent={item.productIdent}", new DynamicParameters());
+            }
+        }
+
+        internal static void UpdateItem(BillItem existingItem)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
+            {
+                cnn.Execute($"update BillItem set quantity={existingItem.Quantity}" +
+                    $" where productIdent={existingItem.productIdent}", new DynamicParameters());
+            }
+        }
+        #endregion
+
         #region users
         public static void SaveUserAsLoggedIn(Users user)
         {
@@ -50,7 +113,8 @@ namespace SQLiteXP.Database
             {
                 cnn.Execute("insert into Users (user, pass, loggedIn) values (@user, @pass, @loggedIn)", user);
             }
-        }
+        }        
+
         public static Users GetLoggedInUser()
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
@@ -59,7 +123,7 @@ namespace SQLiteXP.Database
                 return cnn.Query<Users>(processQuery, new DynamicParameters()).FirstOrDefault();
             }
         }
-
+        
         public static void LogoutUser()
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
@@ -84,6 +148,18 @@ namespace SQLiteXP.Database
 
         #endregion
 
+        #region buyers
+        public static void SaveBuyers(List<Buyers> buyers)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
+            {
+                var query = GetGenericQueryString(new Buyers());
+                cnn.Execute(query, buyers);
+            }
+        }
+
+        #endregion
+
         #region products
         public static List<Products> GetFilteredProducts(string column, string criteria)
         {
@@ -101,6 +177,26 @@ namespace SQLiteXP.Database
             {
                 var query = GetGenericQueryString(new Products());
                 cnn.Execute(query, productsList);
+            }
+        }
+
+        public static void SaveStockWithProductInfo(List<Stock> stock, List<Products> products)
+        {
+            List<StockWithProductInfo> stockWithProducts = (from s in stock
+                                     join p in products on s.sifraProizvoda equals p.sifra
+                                     select new StockWithProductInfo()
+                                     {
+                                         sifraProizvoda = s.sifraProizvoda,
+                                         sifraSkladista = s.sifraSkladista,
+                                         naziv = p.naziv,
+                                         jm = p.jm,
+                                         anRow = s.anRow
+                                     }).ToList();
+
+            using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
+            {
+                var query = GetGenericQueryString(new StockWithProductInfo());
+                cnn.Execute(query, stockWithProducts);
             }
         }
 
@@ -127,6 +223,8 @@ namespace SQLiteXP.Database
                     cmd.CommandText = "delete from DocTypes";
                     cmd.ExecuteNonQuery();
                     cmd.CommandText = "delete from Products";
+                    cmd.ExecuteNonQuery();
+                    cmd.CommandText = "delete from StockWithProductInfo";
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -161,24 +259,23 @@ namespace SQLiteXP.Database
                     cmd.ExecuteNonQuery();
 
                     cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Products (id INTEGER PRIMARY KEY NOT NULL,
-                    acIdent varchar(16), acName VARCHAR(250),acUM VARCHAR(3),anVat FLOAT,anSalePrice FLOAT,
-                    anRtPrice FLOAT, anPluCode INT, acBarCode VARCHAR(100))";
+                    ident integer, sifra VARCHAR(16),naziv VARCHAR(250),grupa VARCHAR(250),jm VARCHAR(10),
+                    barkod VARCHAR(50), pdv float, cena float, popust float, opis varchar(4000))";
                     cmd.ExecuteNonQuery();
 
-                    cmd.CommandText = "DROP TABLE IF EXISTS Customers";
+                    cmd.CommandText = "DROP TABLE IF EXISTS Buyers";
                     cmd.ExecuteNonQuery();
 
-                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Customers (id INTEGER PRIMARY KEY NOT NULL,
-                    acSubject varchar(30), acName2 VARCHAR(250),acAddress VARCHAR(250),acPost VARCHAR(10),
-                    acCity varchar(250), acCode varchar(20), acRegNo  varchar(20), anRebate decimal(19,6),
-                    anDaysForPayment INT)";
+                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Buyers (id INTEGER PRIMARY KEY NOT NULL,
+                    ident integer, sifra VARCHAR(50),naziv VARCHAR(250),adresa VARCHAR(250),
+                    posta varchar(10), grad varchar(250), pib varchar(50), maticniBroj varchar(50))";
                     cmd.ExecuteNonQuery();
 
-                    cmd.CommandText = "DROP TABLE IF EXISTS Stock";
+                    cmd.CommandText = "DROP TABLE IF EXISTS StockWithProductInfo";
                     cmd.ExecuteNonQuery();
 
-                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Stock (id INTEGER PRIMARY KEY NOT NULL,
-                    acWarehouse varchar(30), acIdent VARCHAR(16),anStock decimal(19, 6))";
+                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS StockWithProductInfo (id INTEGER PRIMARY KEY NOT NULL,
+                    sifraSkladista varchar(30), sifraProizvoda VARCHAR(16), zaliha float, naziv VARCHAR(250),anRow VARCHAR(16),jm VARCHAR(10))";
                     cmd.ExecuteNonQuery();
 
                     cmd.CommandText = "DROP TABLE IF EXISTS DocTypes";
@@ -211,6 +308,22 @@ namespace SQLiteXP.Database
                     cmd.CommandText = @" CREATE TABLE IF NOT EXISTS DocItems (id INTEGER PRIMARY KEY NOT NULL, acKey varchar(13),anNo int ,
                     acIdent varchar(16), acName varchar(250),anQty decimal(19,6),anPrice decimal(19,6),
                     anRebate decimal(19,6),anVat decimal(19,6),acVatCode varchar(2),acUM varchar(10))";
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = "DROP TABLE IF EXISTS Bill";
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = @" CREATE TABLE IF NOT EXISTS Bill (id INTEGER PRIMARY KEY NOT NULL, 
+                    dateCreated datetime, status varchar(20))";
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = "DROP TABLE IF EXISTS BillItem";
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = @" CREATE TABLE IF NOT EXISTS BillItem (id INTEGER PRIMARY KEY NOT NULL, 
+                    productIdent int, productCena float, productPopust float,productSifra VARCHAR(16), productNaziv VARCHAR(250), productJM VARCHAR(10), 
+                    productBarkod VARCHAR(50) , 
+                    Quantity float, billId int)";
                     cmd.ExecuteNonQuery();
 
                 }
