@@ -19,3 +19,4 @@ C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\bin\Debug\Newtonsoft.Json.xml
 C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.ProductListForm.resources
 C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.BuyersListForm.resources
 C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.StockListForm.resources
+C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.EditBillItemDialog.resources

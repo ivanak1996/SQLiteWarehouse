@@ -6,6 +6,7 @@ using System.Data;
 using System.Windows.Forms;
 using System.Linq;
 using SQLiteXP.Models.Billing;
+using System.Drawing;
 
 namespace SQLiteXP
 {
@@ -13,6 +14,9 @@ namespace SQLiteXP
     {
         private List<Products> products = new List<Products>();
         private Bill currentBill;
+
+        private DataTable billItemsTable;
+        private DataTable productsTable;
 
         private Dictionary<string, string> comboBoxOptions = new Dictionary<string, string>();
 
@@ -22,8 +26,9 @@ namespace SQLiteXP
             currentBill = WarehouseService.GetOpenBill();
             products = WarehouseService.GetProducts();
             quantity_textBox1.KeyUp += QuantityKeyUp;
-            PopulateTable();
-            PopulateBillItemsTable();
+            InitDataTable();
+            InitBillItemsTable();
+
             comboBoxOptions.Add("Sifra", "sifra");
             comboBoxOptions.Add("Naziv", "naziv");
             comboBoxOptions.Add("Barkod", "barkod");
@@ -34,6 +39,20 @@ namespace SQLiteXP
             }
 
             comboBox_searchColumn.SelectedIndex = 0;
+
+            uplata_textBox1.KeyUp += UplataKeyUp;
+        }
+
+        private void UplataKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                float billTotalPrice = currentBill.TotalPrice();
+                if (float.TryParse(uplata_textBox1.Text, out float toPay) && toPay - billTotalPrice >= 0)
+                {
+                    povracaj_label.Text = (toPay - billTotalPrice).ToString("0.00");
+                }
+            }
         }
 
         private void QuantityKeyUp(object sender, KeyEventArgs e)
@@ -57,6 +76,7 @@ namespace SQLiteXP
                             productSifra = selectedProduct.sifra,
                             productNaziv = selectedProduct.naziv,
                             productJM = selectedProduct.jm,
+                            productPdv = selectedProduct.pdv,
                             productBarkod = selectedProduct.barkod
                         });
 
@@ -65,31 +85,11 @@ namespace SQLiteXP
                 }
                 e.Handled = true;
             }
-        }
+        }        
 
         private void PopulateBillItemsTable()
         {
-            DataTable billItemsTable = new DataTable("BillItems");
-
-            DataColumn c0 = new DataColumn("ID");
-            DataColumn c1 = new DataColumn("Sifra");
-            DataColumn c2 = new DataColumn("Naziv");
-            DataColumn c3 = new DataColumn("JM");
-            DataColumn c4 = new DataColumn("Barkod");
-            DataColumn c5 = new DataColumn("Cena");
-            DataColumn c6 = new DataColumn("Popust");
-            DataColumn c7 = new DataColumn("Kolicina");
-            DataColumn c8 = new DataColumn("UkupnaCena");
-
-            billItemsTable.Columns.Add(c0);
-            billItemsTable.Columns.Add(c1);
-            billItemsTable.Columns.Add(c2);
-            billItemsTable.Columns.Add(c3);
-            billItemsTable.Columns.Add(c4);
-            billItemsTable.Columns.Add(c5);
-            billItemsTable.Columns.Add(c6);
-            billItemsTable.Columns.Add(c7);
-            billItemsTable.Columns.Add(c8);
+            billItemsTable.Rows.Clear();
 
             float totalPrice = 0;
 
@@ -104,6 +104,8 @@ namespace SQLiteXP
                 row["JM"] = item.productJM;
                 row["Barkod"] = item.productBarkod;
                 row["Cena"] = item.productCena.ToString("0.00");
+                row["PDV"] = item.productPdv.ToString("0.00");
+                row["Popust"]= item.productPopust.ToString("0.00");
                 row["Kolicina"] = item.Quantity.ToString("0.00");
                 row["UkupnaCena"] = (itemTotalPrice).ToString("0.00");
 
@@ -111,59 +113,102 @@ namespace SQLiteXP
 
                 totalPrice += itemTotalPrice;
             }
+            ukupno_label2.Text = totalPrice.ToString("0.00");
+        }
+
+        private void InitBillItemsTable()
+        {
+            billItemsTable = new DataTable("BillItems");
+
+            DataColumn c0 = new DataColumn("ID");
+            DataColumn c1 = new DataColumn("Sifra");
+            DataColumn c2 = new DataColumn("Naziv");
+            DataColumn c3 = new DataColumn("JM");
+            DataColumn c4 = new DataColumn("Barkod");
+            DataColumn c5 = new DataColumn("Cena");
+            DataColumn c6 = new DataColumn("PDV");
+            DataColumn c7 = new DataColumn("Popust");
+            DataColumn c8 = new DataColumn("Kolicina");           
+            DataColumn c9 = new DataColumn("UkupnaCena");
+
+            billItemsTable.Columns.Add(c0);
+            billItemsTable.Columns.Add(c1);
+            billItemsTable.Columns.Add(c2);
+            billItemsTable.Columns.Add(c3);
+            billItemsTable.Columns.Add(c4);
+            billItemsTable.Columns.Add(c5);
+            billItemsTable.Columns.Add(c6);
+            billItemsTable.Columns.Add(c7);
+            billItemsTable.Columns.Add(c8);
+            billItemsTable.Columns.Add(c9);
+
+            PopulateBillItemsTable();
+
             billitems_dataGridView1.DataSource = billItemsTable;
             billitems_dataGridView1.ReadOnly = true;
             billitems_dataGridView1.KeyDown += dataGridView1_PreviewKeyDown;
+            billitems_dataGridView1.RowHeaderMouseDoubleClick += DataGridView1_CellDoubleClick;
+            billitems_dataGridView1.DefaultCellStyle.Font = new Font("Arial", 18.5F, GraphicsUnit.Pixel);
+        }
 
-            ukupno_label2.Text = totalPrice.ToString("0.00");
+        private void DataGridView1_CellDoubleClick(Object sender, DataGridViewCellMouseEventArgs e)
+        {
+            ShowMyDialogBox();
+            //System.Text.StringBuilder messageBoxCS = new System.Text.StringBuilder();
+            //messageBoxCS.AppendFormat("{0} = {1}", "ColumnIndex", e.ColumnIndex);
+            //messageBoxCS.AppendLine();
+            //messageBoxCS.AppendFormat("{0} = {1}", "RowIndex", e.RowIndex);
+            //messageBoxCS.AppendLine();
+            //MessageBox.Show(messageBoxCS.ToString(), "CellDoubleClick Event");
+        }
+
+        private void ShowMyDialogBox()
+        {
+            var selectedRow = billitems_dataGridView1.SelectedRows[0];
+            BillItem selectedItem = currentBill.Items.FirstOrDefault(i => i.productIdent == int.Parse(selectedRow.Cells["ID"].Value.ToString()));
+
+            EditBillItemDialog testDialog = new EditBillItemDialog(selectedItem.Quantity, selectedItem.productPopust, selectedItem.productCena);
+                        
+            // Show testDialog as a modal dialog and determine if DialogResult = OK.
+            if (testDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                selectedItem.Quantity = testDialog.Quantity;
+                selectedItem.productPopust = testDialog.Rabat;
+                selectedItem.productCena = testDialog.Cena;
+                currentBill.UpdateItem(selectedItem);
+                PopulateBillItemsTable();
+            }
+            else
+            {
+                //this.txtResult.Text = "Cancelled";
+            }
+            testDialog.Dispose();
         }
 
         private void dataGridView1_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Delete && e.Modifiers == Keys.Control && billitems_dataGridView1.SelectedRows.Count > 0)
+            if (e.KeyCode == Keys.Delete)
             {
-                if (MessageBox.Show("Brisanje stavke racuna?", "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
+                if (e.Modifiers == Keys.Control && billitems_dataGridView1.SelectedRows.Count > 0
+                    && MessageBox.Show("Brisanje stavke racuna?", "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {                    
                     // confirmed, need to delete
                     var selectedRow = billitems_dataGridView1.SelectedRows[0];
-                    BillItem selectedItem = currentBill.Items.FirstOrDefault(i=>i.productIdent == int.Parse(selectedRow.Cells["ID"].Value.ToString()));
-                    
+                    BillItem selectedItem = currentBill.Items.FirstOrDefault(i => i.productIdent == int.Parse(selectedRow.Cells["ID"].Value.ToString()));
+
                     if (selectedItem != null)
                     {
                         currentBill.RemoveItem(selectedItem);
                         PopulateBillItemsTable();
-                    }
+                    }                 
                 }
                 e.Handled = true;
             }
         }
 
-        private void PopulateTable()
+        private void PopulateDataTable()
         {
-            DataTable productsTable = new DataTable("Products");
-
-            DataColumn c0 = new DataColumn("ID");
-            DataColumn c1 = new DataColumn("Sifra");
-            DataColumn c2 = new DataColumn("Naziv");
-            DataColumn c3 = new DataColumn("Grupa");
-            DataColumn c8 = new DataColumn("JM");
-            DataColumn c9 = new DataColumn("Barkod");
-            DataColumn c4 = new DataColumn("PDV");
-            DataColumn c5 = new DataColumn("Cena");
-            DataColumn c6 = new DataColumn("Popust");
-            DataColumn c7 = new DataColumn("Opis");            
-
-            productsTable.Columns.Add(c0);
-            productsTable.Columns.Add(c1);
-            productsTable.Columns.Add(c2);
-            productsTable.Columns.Add(c3);
-            productsTable.Columns.Add(c8);
-            productsTable.Columns.Add(c9);
-            productsTable.Columns.Add(c4);
-            productsTable.Columns.Add(c5);
-            productsTable.Columns.Add(c6);
-            productsTable.Columns.Add(c7);
-
+            productsTable.Rows.Clear();
             foreach (var product in products)
             {
                 var row = productsTable.NewRow();
@@ -179,14 +224,46 @@ namespace SQLiteXP
                 row["Opis"] = product.opis;
                 productsTable.Rows.Add(row);
             }
+        }              
+
+        private void InitDataTable()
+        {
+            productsTable = new DataTable("Products");
+
+            DataColumn c0 = new DataColumn("ID");
+            DataColumn c1 = new DataColumn("Sifra");
+            DataColumn c2 = new DataColumn("Naziv");
+            DataColumn c3 = new DataColumn("Grupa");
+            DataColumn c8 = new DataColumn("JM");
+            DataColumn c9 = new DataColumn("Barkod");
+            DataColumn c4 = new DataColumn("PDV");
+            DataColumn c5 = new DataColumn("Cena");
+            DataColumn c6 = new DataColumn("Popust");
+            DataColumn c7 = new DataColumn("Opis");
+
+            productsTable.Columns.Add(c0);
+            productsTable.Columns.Add(c1);
+            productsTable.Columns.Add(c2);
+            productsTable.Columns.Add(c3);
+            productsTable.Columns.Add(c8);
+            productsTable.Columns.Add(c9);
+            productsTable.Columns.Add(c4);
+            productsTable.Columns.Add(c5);
+            productsTable.Columns.Add(c6);
+            productsTable.Columns.Add(c7);
+
+            PopulateDataTable();
+            
             dataGridView_products.DataSource = productsTable;
             dataGridView_products.ReadOnly = true;
+            dataGridView_products.DefaultCellStyle.Font = new Font("Arial", 18.5F, GraphicsUnit.Pixel);
         }
 
         private void UpdateResults(List<Products> updatedProducts)
         {
             products = updatedProducts;
-            PopulateTable();
+            //InitDataTable();
+            PopulateDataTable();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -207,6 +284,5 @@ namespace SQLiteXP
             List<Products> filteredProducts = WarehouseService.GetFilteredProducts(column, criteria);
             UpdateResults(filteredProducts);
         }
-
     }
 }

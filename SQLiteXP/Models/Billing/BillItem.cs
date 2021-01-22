@@ -18,6 +18,7 @@ namespace SQLiteXP.Models.Billing
         public string productSifra { get; set; }
         public string productNaziv { get; set; }
         public string productJM { get; set; }
+        public float productPdv { get; set; }
         public string productBarkod { get; set; }
     }
 }

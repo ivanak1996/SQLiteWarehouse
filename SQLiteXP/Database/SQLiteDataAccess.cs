@@ -100,8 +100,9 @@ namespace SQLiteXP.Database
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
             {
-                cnn.Execute($"update BillItem set quantity={existingItem.Quantity}" +
-                    $" where productIdent={existingItem.productIdent}", new DynamicParameters());
+                cnn.Execute($"update BillItem " +
+                    $"set quantity={existingItem.Quantity}, productCena={existingItem.productCena}, productPopust={existingItem.productPopust} " +
+                    $"where productIdent={existingItem.productIdent}", new DynamicParameters());
             }
         }
         #endregion
@@ -322,7 +323,7 @@ namespace SQLiteXP.Database
 
                     cmd.CommandText = @" CREATE TABLE IF NOT EXISTS BillItem (id INTEGER PRIMARY KEY NOT NULL, 
                     productIdent int, productCena float, productPopust float,productSifra VARCHAR(16), productNaziv VARCHAR(250), productJM VARCHAR(10), 
-                    productBarkod VARCHAR(50) , 
+                    productBarkod VARCHAR(50), productPdv float , 
                     Quantity float, billId int)";
                     cmd.ExecuteNonQuery();
 

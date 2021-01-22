@@ -18,20 +18,20 @@ namespace SQLiteXP.Models.Billing
         //todo consider storing total price as a field
         public float TotalPrice()
         {
-            return Items.Sum(i => i.Quantity * i.productCena);
+            return Items.Sum(i => i.Quantity * i.productCena - i.productPopust);
         }
 
         public void AddItem(BillItem item)
         {
             BillItem existingItem = Items.FirstOrDefault(i => i.productIdent == item.productIdent);
-            if (existingItem == null && item.Quantity != 0)
+            if (existingItem == null && item.Quantity > 0)
             {
                 Items.Add(item);
                 SQLiteDataAccess.InsertBillItem(item);
             }
             else
             {                
-                if (existingItem.Quantity + item.Quantity != 0)
+                if (existingItem.Quantity + item.Quantity > 0)
                 {
                     existingItem.Quantity += item.Quantity;
                     SQLiteDataAccess.UpdateItem(existingItem);
@@ -40,6 +40,18 @@ namespace SQLiteXP.Models.Billing
                 {
                     RemoveItem(existingItem);
                 }
+            }
+        }
+
+        public void UpdateItem(BillItem item)
+        {
+            if (item.Quantity > 0)
+            {
+                SQLiteDataAccess.UpdateItem(item);
+            }
+            else
+            {
+                RemoveItem(item);
             }
         }
 
