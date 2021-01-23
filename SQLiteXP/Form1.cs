@@ -3,7 +3,7 @@ using SQLiteXP.Models;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using System.Drawing;
+using System.Linq;
 
 namespace SQLiteXP
 {
@@ -12,6 +12,8 @@ namespace SQLiteXP
         const string panel_login = "login";
         const string panel_main = "main";
         readonly Dictionary<string, Panel> panels = new Dictionary<string, Panel>();
+        private List<DocTypes> docTypes = new List<DocTypes>();
+        private List<Products> products = new List<Products>();
         string message = "";
 
         private Users loggedInUser;
@@ -71,15 +73,17 @@ namespace SQLiteXP
 
         private void FocusMainPanel()
         {
-            IList<string> docTypes = WarehouseService.GetDocTypesNames();
+            docTypes = WarehouseService.GetAllDocTypes();
             dokumentiToolStripMenuItem.DropDownItems.Clear();
             foreach (var dt in docTypes)
             {
-                ToolStripMenuItem menu = new ToolStripMenuItem(dt);
+                ToolStripMenuItem menu = new ToolStripMenuItem($"{dt.acDocType} {dt.acName}");
                 menu.Click += new EventHandler(menu_Click);
                 dokumentiToolStripMenuItem.DropDownItems.Add(menu);
             }
             panels[panel_main].BringToFront();
+
+            products = WarehouseService.GetProducts();
         }
 
         void menu_Click(object sender, EventArgs e)
@@ -94,7 +98,11 @@ namespace SQLiteXP
                     return;
                 }
             }
-            tabControl_documents.TabPages.Add(menuText);
+            TabPage newTab = new TabPage(menuText);
+            BillControl billControl = new BillControl(docTypes.FirstOrDefault(dt => $"{dt.acDocType} {dt.acName}" == menuText).acDocType, products);
+            billControl.Dock = DockStyle.Fill;
+            newTab.Controls.Add(billControl);
+            tabControl_documents.TabPages.Add(newTab);
         }
 
         private void logoutToolStripMenuItem_Click(object sender, EventArgs e)

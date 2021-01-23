@@ -54,6 +54,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BillControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BillControl.Designer.cs">
+      <DependentUpon>BillControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="BuyersListForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -104,6 +110,9 @@
       <DependentUpon>StockListForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Web\JSONParser.cs" />
+    <EmbeddedResource Include="BillControl.resx">
+      <DependentUpon>BillControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="BuyersListForm.resx">
       <DependentUpon>BuyersListForm.cs</DependentUpon>
     </EmbeddedResource>

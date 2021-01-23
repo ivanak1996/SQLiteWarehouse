@@ -43,6 +43,24 @@ namespace SQLiteXP.Database
             return query + values;
         }
 
+        internal static IList<BillItem> GetAllBillItemsForBill(int billId)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
+            {
+                string processQuery = $"select * from BillItem where billId={billId}";
+                return cnn.Query<BillItem>(processQuery, new DynamicParameters()).ToList();
+            }
+        }
+
+        internal static List<Bill> GetAllBillsWithDocType(string docType)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
+            {
+                string processQuery = $"select * from Bill where docType='{docType}'";
+                return cnn.Query<Bill>(processQuery, new DynamicParameters()).ToList();
+            }
+        }
+
         #endregion
 
         #region billing
@@ -103,6 +121,33 @@ namespace SQLiteXP.Database
                 cnn.Execute($"update BillItem " +
                     $"set quantity={existingItem.Quantity}, productCena={existingItem.productCena}, productPopust={existingItem.productPopust} " +
                     $"where productIdent={existingItem.productIdent}", new DynamicParameters());
+            }
+        }
+
+        internal static Bill CreateNewBill(int year, string docType)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
+            {                
+                string processQuery = $"select max(ordinaryNumber) from Bill where docType='{docType}'";
+                int nextOrdinaryId = 1;
+                var result = cnn.Query<int?>(processQuery, new DynamicParameters()).FirstOrDefault() ?? 0;
+                nextOrdinaryId = 1 + result;
+                
+
+                Bill bill = new Bill(year, docType, nextOrdinaryId)
+                {
+                    Status = Bill.STATUS_OPEN
+                };
+
+                processQuery = @"INSERT INTO Bill (DateCreated, status, year, docType, ordinaryNumber) 
+                                VALUES (@DateCreated, @status, @year, @docType, @ordinaryNumber)";
+                cnn.Execute(processQuery, bill);
+
+                processQuery = $"select Id from Bill where docType='{docType}' and year={bill.year} and ordinaryNumber={nextOrdinaryId}";
+
+                bill.Id = cnn.Query<int>(processQuery, new DynamicParameters()).FirstOrDefault();
+
+                return bill;
             }
         }
         #endregion
@@ -315,7 +360,7 @@ namespace SQLiteXP.Database
                     cmd.ExecuteNonQuery();
 
                     cmd.CommandText = @" CREATE TABLE IF NOT EXISTS Bill (id INTEGER PRIMARY KEY NOT NULL, 
-                    dateCreated datetime, status varchar(20))";
+                    dateCreated datetime, status varchar(20), year integer, docType varchar(4), ordinaryNumber integer)";
                     cmd.ExecuteNonQuery();
 
                     cmd.CommandText = "DROP TABLE IF EXISTS BillItem";

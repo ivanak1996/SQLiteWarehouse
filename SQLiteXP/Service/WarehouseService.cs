@@ -26,6 +26,11 @@ namespace SQLiteXP.Service
             return SQLiteDataAccess.GetAll<Products>();
         }
 
+        internal static List<Bill> GetAllBillsWithDocType(string docType)
+        {
+            return SQLiteDataAccess.GetAllBillsWithDocType(docType);
+        }
+
         public static Bill GetOpenBill()
         {
             return SQLiteDataAccess.GetOpenBill();
@@ -76,6 +81,11 @@ namespace SQLiteXP.Service
         {
             List<DocTypes> docTypes = SQLiteDataAccess.GetAll<DocTypes>();
             return docTypes.ConvertAll(d => $"{d.acDocType} {d.acName}");
+        }
+
+        public static List<DocTypes> GetAllDocTypes()
+        {
+            return SQLiteDataAccess.GetAll<DocTypes>();
         }
 
         public static Users LoginUser(string userEmail, string userPass)
@@ -130,5 +140,9 @@ namespace SQLiteXP.Service
             SQLiteDataAccess.LogoutUser();
         }
 
+        internal static Bill CreateNewBill(int year, string docType)
+        {
+            return SQLiteDataAccess.CreateNewBill(year, docType);
+        }
     }
 }

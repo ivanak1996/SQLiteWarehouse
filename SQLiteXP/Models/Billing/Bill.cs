@@ -14,11 +14,38 @@ namespace SQLiteXP.Models.Billing
         public string Status { get; set; }
         public int Id { get; set; }
         public IList<BillItem> Items { get; set; } = new List<BillItem>();
+        public int year { get; private set; }
+        public string docType { get; private set; }
+        public int ordinaryNumber { get; private set; }
+
+        private bool itemsLoaded = false;
+
+        public string GetBillNumber()
+        {
+            return $"{year}-{docType}-{ordinaryNumber}";
+        }
+
+        public Bill() { }
+
+        public Bill(int year, string docType, int ordinaryNumber)
+        {
+            this.year = year;
+            this.docType = docType;
+            this.ordinaryNumber = ordinaryNumber;
+        }
 
         //todo consider storing total price as a field
         public float TotalPrice()
         {
             return Items.Sum(i => i.Quantity * i.productCena - i.productPopust);
+        }
+        public void LoadItems()
+        {
+            if (!itemsLoaded)
+            {
+                Items = SQLiteDataAccess.GetAllBillItemsForBill(Id);
+                itemsLoaded = true;
+            }
         }
 
         public void AddItem(BillItem item)

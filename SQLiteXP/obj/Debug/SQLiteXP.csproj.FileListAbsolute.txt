@@ -20,3 +20,4 @@ C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.ProductListForm
 C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.BuyersListForm.resources
 C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.StockListForm.resources
 C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.EditBillItemDialog.resources
+C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.BillControl.resources
