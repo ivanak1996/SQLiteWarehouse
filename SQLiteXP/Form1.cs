@@ -14,6 +14,8 @@ namespace SQLiteXP
         readonly Dictionary<string, Panel> panels = new Dictionary<string, Panel>();
         private List<DocTypes> docTypes = new List<DocTypes>();
         private List<Products> products = new List<Products>();
+        private List<Buyers> buyers = new List<Buyers>();
+
         string message = "";
 
         private Users loggedInUser;
@@ -84,6 +86,7 @@ namespace SQLiteXP
             panels[panel_main].BringToFront();
 
             products = WarehouseService.GetProducts();
+            buyers = WarehouseService.GetBuyers();
         }
 
         void menu_Click(object sender, EventArgs e)
@@ -99,7 +102,7 @@ namespace SQLiteXP
                 }
             }
             TabPage newTab = new TabPage(menuText);
-            BillControl billControl = new BillControl(docTypes.FirstOrDefault(dt => $"{dt.acDocType} {dt.acName}" == menuText).acDocType, products);
+            BillControl billControl = new BillControl(docTypes.FirstOrDefault(dt => $"{dt.acDocType} {dt.acName}" == menuText).acDocType, products, buyers);
             billControl.Dock = DockStyle.Fill;
             newTab.Controls.Add(billControl);
             tabControl_documents.TabPages.Add(newTab);

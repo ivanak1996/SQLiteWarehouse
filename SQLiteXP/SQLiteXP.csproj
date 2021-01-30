@@ -109,6 +109,12 @@
     <Compile Include="StockListForm.Designer.cs">
       <DependentUpon>StockListForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TotalPricesDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TotalPricesDialog.Designer.cs">
+      <DependentUpon>TotalPricesDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Web\JSONParser.cs" />
     <EmbeddedResource Include="BillControl.resx">
       <DependentUpon>BillControl.cs</DependentUpon>
@@ -137,6 +143,9 @@
     </Compile>
     <EmbeddedResource Include="StockListForm.resx">
       <DependentUpon>StockListForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TotalPricesDialog.resx">
+      <DependentUpon>TotalPricesDialog.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

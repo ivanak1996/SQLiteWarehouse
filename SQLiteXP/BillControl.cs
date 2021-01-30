@@ -15,10 +15,12 @@ namespace SQLiteXP
         private string docType;
         private List<Products> products = new List<Products>();
         private List<Bill> bills = new List<Bill>();
+        private List<Buyers> buyers = new List<Buyers>();
         private Bill currentBill;
         private int currentBillIndex;
         private DataTable billItemsTable;
         private Dictionary<string, string> comboBoxOptions = new Dictionary<string, string>();
+        private string lastComboBoxInput = string.Empty;
 
         private void SelectBill(int index)
         {
@@ -31,7 +33,7 @@ namespace SQLiteXP
             PopulateBillItemsTable();
         }
 
-        public BillControl(string docType, List<Products> products)
+        public BillControl(string docType, List<Products> products, List<Buyers> buyers)
         {
             this.docType = docType;
             this.products = products;
@@ -50,34 +52,100 @@ namespace SQLiteXP
             comboBoxOptions.Add("Sifra", "sifra");
             comboBoxOptions.Add("Naziv", "naziv");
             comboBoxOptions.Add("Barkod", "barkod");
+
+            comboBox_products.KeyDown += ComboBoxProducts_KeyDown;
+            comboBox_products.KeyUp += ComboBoxProducts_KeyUp;
+            uplata_textBox1.KeyUp += UplataKeyUp;
+
+            this.buyers = buyers;
+            foreach (var buyer in buyers)
+            {
+                comboBox_kupci.Items.Add(buyer.sifra);
+            }
+            comboBox_kupci.SelectedIndexChanged += ComboBoxKupci_SelectedIndexChanged;
+        }
+
+        private void ComboBoxKupci_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.OnBuyerSelected(comboBox_kupci.SelectedIndex);
+        }
+
+        private void OnBuyerSelected(int index)
+        {
+            textBox_kupacAdresa.Text = buyers[index].adresa;
+            textBox_kupacGrad.Text = buyers[index].grad;
+        }
+
+        private void UplataKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                float billTotalPrice = currentBill.TotalPrice();
+                if (float.TryParse(uplata_textBox1.Text, out float toPay) && toPay - billTotalPrice >= 0)
+                {
+                    povracaj_label.Text = (toPay - billTotalPrice).ToString("0.00");
+                }
+            }
+        }
+
+        private void ComboBoxProducts_KeyDown(object sender, KeyEventArgs e)
+        {
+            lastComboBoxInput = comboBox_products.Text;
+        }
+
+        private void ComboBoxProducts_KeyUp(object sender, KeyEventArgs e)
+        {
+            string comboBoxInput = comboBox_products.Text;
+            if (lastComboBoxInput != comboBoxInput)
+            {
+                comboBoxInput = comboBoxInput.ToLower();
+                comboBox_products.Items.Clear();
+                var selection = products
+                    .Where(p => p.sifra.ToLower().Contains(comboBoxInput)
+                    || p.naziv.ToLower().Contains(comboBoxInput)
+                    || p.barkod.ToLower().Contains(comboBoxInput))
+                    .Select(p => $"{p.sifra} {p.naziv}");
+
+                foreach (var key in selection)
+                {
+                    comboBox_products.Items.Add(key);
+                }
+                comboBox_products.SelectionStart = comboBox_products.Text.Length;
+                comboBox_products.SelectionLength = 0;
+            }
+            e.Handled = true;
         }
 
         private void QuantityKeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter && currentBill!= null)
             {
-                string selectedProductBarcode = textBox_searchCriteria.Text;
-
-                Products selectedProduct = products.FirstOrDefault(products => products.sifra == selectedProductBarcode);
-                if (selectedProduct != null)
+                string[] parts = comboBox_products.Text.Split(' ');
+                if (parts.Length > 0)
                 {
-                    float quantityToAdd = 1; //default
-                    if (float.TryParse(quantity_textBox1.Text, out quantityToAdd))
-                    {
-                        currentBill.AddItem(new BillItem()
-                        {
-                            billId = currentBill.Id,
-                            Quantity = quantityToAdd,
-                            productIdent = selectedProduct.ident,
-                            productCena = selectedProduct.cena,
-                            productSifra = selectedProduct.sifra,
-                            productNaziv = selectedProduct.naziv,
-                            productJM = selectedProduct.jm,
-                            productPdv = selectedProduct.pdv,
-                            productBarkod = selectedProduct.barkod
-                        });
+                    string selectedProductSifra = parts[0];
 
-                        PopulateBillItemsTable();
+                    Products selectedProduct = products.FirstOrDefault(products => products.sifra == selectedProductSifra);
+                    if (selectedProduct != null)
+                    {
+                        float quantityToAdd = 1; //default
+                        if (float.TryParse(quantity_textBox1.Text, out quantityToAdd))
+                        {
+                            currentBill.AddItem(new BillItem()
+                            {
+                                billId = currentBill.Id,
+                                Quantity = quantityToAdd,
+                                productIdent = selectedProduct.ident,
+                                productCena = selectedProduct.cena,
+                                productSifra = selectedProduct.sifra,
+                                productNaziv = selectedProduct.naziv,
+                                productJM = selectedProduct.jm,
+                                productPdv = selectedProduct.pdv,
+                                productBarkod = selectedProduct.barkod
+                            });
+
+                            PopulateBillItemsTable();
+                        }
                     }
                 }
                 
@@ -203,21 +271,38 @@ namespace SQLiteXP
             ukupno_label2.Text = totalPrice.ToString("0.00");
         }
 
-        private void button_previousBill_Click(object sender, EventArgs e)
+        private void button_previousBill_Click_1(object sender, EventArgs e)
         {
             SelectBill(currentBillIndex - 1);
         }
 
-        private void button_nextBill_Click(object sender, EventArgs e)
+        private void button_nextBill_Click_1(object sender, EventArgs e)
         {
             SelectBill(currentBillIndex + 1);
         }
 
-        private void button_newBill_Click(object sender, EventArgs e)
+        private void button_newBill_Click_1(object sender, EventArgs e)
         {
             Bill bill = WarehouseService.CreateNewBill(DateTime.Now.Year % 100, docType);
             bills.Add(bill);
             SelectBill(bills.Count - 1);
         }
+
+        private void button_uplata_Click(object sender, EventArgs e)
+        {
+            
+            TotalPricesDialog dialog = new TotalPricesDialog(currentBill.RacunBezPopusta(), currentBill.Popust(), 0, 0, 0, 0, 0, 0);
+
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+            {
+                    
+            }
+            else
+            {
+                //this.txtResult.Text = "Cancelled";
+            }
+            dialog.Dispose();
+        }
+        
     }
 }

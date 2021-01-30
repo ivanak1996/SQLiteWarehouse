@@ -370,7 +370,7 @@ namespace SQLiteXP.Database
                     productIdent int, productCena float, productPopust float,productSifra VARCHAR(16), productNaziv VARCHAR(250), productJM VARCHAR(10), 
                     productBarkod VARCHAR(50), productPdv float , 
                     Quantity float, billId int)";
-                    cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();                
 
                 }
             }

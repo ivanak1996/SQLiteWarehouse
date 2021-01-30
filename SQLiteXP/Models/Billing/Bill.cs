@@ -39,6 +39,17 @@ namespace SQLiteXP.Models.Billing
         {
             return Items.Sum(i => i.Quantity * i.productCena - i.productPopust);
         }
+
+        public float RacunBezPopusta()
+        {
+            return Items.Sum(i => i.Quantity * i.productCena);
+        }
+
+        public float Popust()
+        {
+            return Items.Sum(i => i.productPopust);
+        }
+
         public void LoadItems()
         {
             if (!itemsLoaded)

@@ -41,13 +41,13 @@ namespace SQLiteXP
             this.izvestajiToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.zalihaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.prometToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.racunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl_documents = new SQLiteXP.Misc.TabControlEx();
             this.tableLayoutPanel_login = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.button_login = new System.Windows.Forms.Button();
             this.textBox_username = new System.Windows.Forms.TextBox();
             this.textBox_pwd = new System.Windows.Forms.TextBox();
-            this.racunToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel_main.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.tableLayoutPanel_login.SuspendLayout();
@@ -66,6 +66,7 @@ namespace SQLiteXP
             this.tableLayoutPanel_main.RowCount = 2;
             this.tableLayoutPanel_main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
             this.tableLayoutPanel_main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel_main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel_main.Size = new System.Drawing.Size(640, 360);
             this.tableLayoutPanel_main.TabIndex = 1;
             // 
@@ -98,28 +99,28 @@ namespace SQLiteXP
             // proizvodiToolStripMenuItem
             // 
             this.proizvodiToolStripMenuItem.Name = "proizvodiToolStripMenuItem";
-            this.proizvodiToolStripMenuItem.Size = new System.Drawing.Size(217, 30);
+            this.proizvodiToolStripMenuItem.Size = new System.Drawing.Size(224, 30);
             this.proizvodiToolStripMenuItem.Text = "Proizvodi";
             this.proizvodiToolStripMenuItem.Click += new System.EventHandler(this.proizvodiToolStripMenuItem_Click);
             // 
             // kupciToolStripMenuItem
             // 
             this.kupciToolStripMenuItem.Name = "kupciToolStripMenuItem";
-            this.kupciToolStripMenuItem.Size = new System.Drawing.Size(217, 30);
+            this.kupciToolStripMenuItem.Size = new System.Drawing.Size(224, 30);
             this.kupciToolStripMenuItem.Text = "Kupci";
             this.kupciToolStripMenuItem.Click += new System.EventHandler(this.kupciToolStripMenuItem_Click);
             // 
             // sinhronizacijaToolStripMenuItem
             // 
             this.sinhronizacijaToolStripMenuItem.Name = "sinhronizacijaToolStripMenuItem";
-            this.sinhronizacijaToolStripMenuItem.Size = new System.Drawing.Size(217, 30);
+            this.sinhronizacijaToolStripMenuItem.Size = new System.Drawing.Size(224, 30);
             this.sinhronizacijaToolStripMenuItem.Text = "Sinhronizacija";
             this.sinhronizacijaToolStripMenuItem.Click += new System.EventHandler(this.sinhronizacijaToolStripMenuItem_Click);
             // 
             // logoutToolStripMenuItem
             // 
             this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(217, 30);
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(224, 30);
             this.logoutToolStripMenuItem.Text = "Logout";
             this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
             // 
@@ -150,6 +151,11 @@ namespace SQLiteXP
             this.prometToolStripMenuItem1.Name = "prometToolStripMenuItem1";
             this.prometToolStripMenuItem1.Size = new System.Drawing.Size(159, 30);
             this.prometToolStripMenuItem1.Text = "Promet";
+            // 
+            // racunToolStripMenuItem
+            // 
+            this.racunToolStripMenuItem.Name = "racunToolStripMenuItem";
+            this.racunToolStripMenuItem.Size = new System.Drawing.Size(14, 29);
             // 
             // tabControl_documents
             // 
