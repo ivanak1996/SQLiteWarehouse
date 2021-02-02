@@ -18,6 +18,16 @@ namespace SQLiteXP.Models.Billing
         public string docType { get; private set; }
         public int ordinaryNumber { get; private set; }
 
+        // payment details - sta je uplaceno preko cega
+        public float cek { get; set; }
+        public float gotovina { get; set; }
+        public float virman { get; set; }
+        public float kartica { get; set; }
+        public float uplaceno { get; set; }
+        public float povracaj { get; set; }
+        public float iznos { get; set; }
+        public float popust { get; set; }
+
         private bool itemsLoaded = false;
 
         public string GetBillNumber()
@@ -97,6 +107,11 @@ namespace SQLiteXP.Models.Billing
         {
             Items.Remove(item);
             SQLiteDataAccess.DeleteItem(item);
+        }
+
+        public void Save()
+        {
+            SQLiteDataAccess.UpdateBill(this);
         }
     }
 }

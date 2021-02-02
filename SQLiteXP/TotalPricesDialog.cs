@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLiteXP.Models.Billing;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,6 +12,8 @@ namespace SQLiteXP
 {
     public partial class TotalPricesDialog : Form
     {
+        private Bill bill;
+
         public float iznos { get; private set; }
         public float popust { get; private set; }
         public float uplaceno { get; private set; }
@@ -20,18 +23,20 @@ namespace SQLiteXP
         public float kartica { get; private set; }
         public float gotovina { get; private set; }
 
-        public TotalPricesDialog(float iznos, float popust, float uplaceno, float povracaj,
-            float cek, float virman, float kartica, float gotovina)
+        public TotalPricesDialog(Bill bill)
         {
             InitializeComponent();
-            this.iznos = iznos;
-            this.popust = popust;
-            this.uplaceno = uplaceno;
-            this.povracaj = povracaj;
-            this.kartica = kartica;
-            this.cek = cek;
-            this.virman = virman;
-            this.gotovina = gotovina;
+
+            this.bill = bill;
+
+            this.iznos = bill.RacunBezPopusta();
+            this.popust = bill.Popust();
+            this.uplaceno = bill.uplaceno;
+            this.povracaj = bill.povracaj;
+            this.kartica = bill.kartica;
+            this.cek = bill.cek;
+            this.virman = bill.virman;
+            this.gotovina = bill.gotovina;
 
             textBox_iznos.Text = iznos.ToString("0.00");
             textBox_popust.Text = popust.ToString("0.00");
@@ -46,6 +51,8 @@ namespace SQLiteXP
             textBox_cek.LostFocus += textBox_Leave;
             textBox_virman.LostFocus += textBox_Leave;
             textBox_gotovina.LostFocus += textBox_Leave;
+
+            this.KeyDown += KeyEvent;
         }
 
         private void textBox_Leave(object sender, EventArgs e)
@@ -96,7 +103,7 @@ namespace SQLiteXP
                 this.gotovina = gotovina;
 
                 uplaceno = cek + virman + kartica + gotovina;
-                povracaj = iznos - uplaceno;
+                povracaj = uplaceno - iznos;
 
                 textBox_povracaj.Text = povracaj.ToString("0.00");
                 textBox_uplaceno.Text = uplaceno.ToString("0.00");
@@ -112,6 +119,13 @@ namespace SQLiteXP
         {
             if (CalculatePrices())
             {
+                bill.popust = popust;
+                bill.uplaceno = uplaceno;
+                bill.povracaj = povracaj;
+                bill.kartica = kartica;
+                bill.cek = cek;
+                bill.virman = virman;
+                bill.gotovina = gotovina;
                 DialogResult = DialogResult.OK;
             }
         }

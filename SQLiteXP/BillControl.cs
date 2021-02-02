@@ -21,6 +21,7 @@ namespace SQLiteXP
         private DataTable billItemsTable;
         private Dictionary<string, string> comboBoxOptions = new Dictionary<string, string>();
         private string lastComboBoxInput = string.Empty;
+        private TextBox lastFocusedTextBox;
 
         private void SelectBill(int index)
         {
@@ -63,6 +64,18 @@ namespace SQLiteXP
                 comboBox_kupci.Items.Add(buyer.sifra);
             }
             comboBox_kupci.SelectedIndexChanged += ComboBoxKupci_SelectedIndexChanged;
+            
+            uplata_textBox1.LostFocus += new EventHandler(dataGridView1_LostFocus);
+        }
+
+        
+
+        void dataGridView1_LostFocus(object sender, EventArgs e)
+        {
+            if (sender is TextBox)
+            {
+                lastFocusedTextBox = (TextBox)sender;
+            }
         }
 
         private void ComboBoxKupci_SelectedIndexChanged(object sender, EventArgs e)
@@ -291,11 +304,11 @@ namespace SQLiteXP
         private void button_uplata_Click(object sender, EventArgs e)
         {
             
-            TotalPricesDialog dialog = new TotalPricesDialog(currentBill.RacunBezPopusta(), currentBill.Popust(), 0, 0, 0, 0, 0, 0);
+            TotalPricesDialog dialog = new TotalPricesDialog(currentBill);
 
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
-                    
+                currentBill.Save();
             }
             else
             {
@@ -303,6 +316,87 @@ namespace SQLiteXP
             }
             dialog.Dispose();
         }
-        
+
+        private void KeyboardNumericClickHandler(int number)
+        {
+            if (lastFocusedTextBox != null)
+            {
+                lastFocusedTextBox.Text += $"{number}";
+            }
+        }
+
+        private void button_0_Click(object sender, EventArgs e)
+        {
+            KeyboardNumericClickHandler(0);
+        }
+
+        private void button_point_Click(object sender, EventArgs e)
+        {
+            if (lastFocusedTextBox != null && float.TryParse(lastFocusedTextBox.Text, out float value))
+            {
+                string[] parts = lastFocusedTextBox.Text.Split('.');
+                if (parts.Length == 2) return;
+                lastFocusedTextBox.Text += ".";
+            }
+        }
+
+        private void button_1_Click(object sender, EventArgs e)
+        {
+            KeyboardNumericClickHandler(1);
+        }
+
+        private void button_2_Click(object sender, EventArgs e)
+        {
+            KeyboardNumericClickHandler(2);
+        }
+
+        private void button_3_Click(object sender, EventArgs e)
+        {
+            KeyboardNumericClickHandler(3);
+        }
+
+        private void button_4_Click(object sender, EventArgs e)
+        {
+            KeyboardNumericClickHandler(4);
+        }
+
+        private void button_5_Click(object sender, EventArgs e)
+        {
+            KeyboardNumericClickHandler(5);
+        }
+
+        private void button_6_Click(object sender, EventArgs e)
+        {
+            KeyboardNumericClickHandler(6);
+        }
+
+        private void button_7_Click(object sender, EventArgs e)
+        {
+            KeyboardNumericClickHandler(7);
+        }
+
+        private void button_8_Click(object sender, EventArgs e)
+        {
+            KeyboardNumericClickHandler(8);
+        }
+
+        private void button_9_Click(object sender, EventArgs e)
+        {
+            KeyboardNumericClickHandler(9);
+        }
+
+        private void button_backspace_Click(object sender, EventArgs e)
+        {
+            if (lastFocusedTextBox != null && float.TryParse(lastFocusedTextBox.Text, out float value))
+            {
+                lastFocusedTextBox.Text = lastFocusedTextBox.Text.Remove(lastFocusedTextBox.Text.Length - 1);
+            }
+        }
+
+        private void button_enter_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

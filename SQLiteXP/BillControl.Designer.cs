@@ -81,7 +81,15 @@ namespace SQLiteXP
             this.button_3 = new System.Windows.Forms.Button();
             this.button_2 = new System.Windows.Forms.Button();
             this.button_1 = new System.Windows.Forms.Button();
-            this.textBox_uplata = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.textBox_gotovina = new System.Windows.Forms.TextBox();
+            this.textBox_kartica = new System.Windows.Forms.TextBox();
+            this.textBox_virman = new System.Windows.Forms.TextBox();
+            this.textBox_cek = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_billItems)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
@@ -97,6 +105,7 @@ namespace SQLiteXP
             this.tableLayoutPanel12.SuspendLayout();
             this.tableLayoutPanel13.SuspendLayout();
             this.tableLayoutPanel14.SuspendLayout();
+            this.tableLayoutPanel15.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView_billItems
@@ -439,7 +448,7 @@ namespace SQLiteXP
             this.tableLayoutPanel1.Controls.Add(this.dataGridView_billItems, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel4, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.textBox_uplata, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel15, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -571,6 +580,7 @@ namespace SQLiteXP
             this.button_enter.TabIndex = 6;
             this.button_enter.Text = "Enter";
             this.button_enter.UseVisualStyleBackColor = true;
+            this.button_enter.Click += new System.EventHandler(this.button_enter_Click);
             // 
             // button_backspace
             // 
@@ -582,6 +592,7 @@ namespace SQLiteXP
             this.button_backspace.TabIndex = 5;
             this.button_backspace.Text = "Backspace";
             this.button_backspace.UseVisualStyleBackColor = true;
+            this.button_backspace.Click += new System.EventHandler(this.button_backspace_Click);
             // 
             // tableLayoutPanel11
             // 
@@ -614,6 +625,7 @@ namespace SQLiteXP
             this.button_6.TabIndex = 5;
             this.button_6.Text = "6";
             this.button_6.UseVisualStyleBackColor = true;
+            this.button_6.Click += new System.EventHandler(this.button_6_Click);
             // 
             // button_5
             // 
@@ -624,6 +636,7 @@ namespace SQLiteXP
             this.button_5.TabIndex = 4;
             this.button_5.Text = "5";
             this.button_5.UseVisualStyleBackColor = true;
+            this.button_5.Click += new System.EventHandler(this.button_5_Click);
             // 
             // button_4
             // 
@@ -634,6 +647,7 @@ namespace SQLiteXP
             this.button_4.TabIndex = 3;
             this.button_4.Text = "4";
             this.button_4.UseVisualStyleBackColor = true;
+            this.button_4.Click += new System.EventHandler(this.button_4_Click);
             // 
             // button_9
             // 
@@ -644,6 +658,7 @@ namespace SQLiteXP
             this.button_9.TabIndex = 2;
             this.button_9.Text = "9";
             this.button_9.UseVisualStyleBackColor = true;
+            this.button_9.Click += new System.EventHandler(this.button_9_Click);
             // 
             // button_8
             // 
@@ -654,6 +669,7 @@ namespace SQLiteXP
             this.button_8.TabIndex = 1;
             this.button_8.Text = "8";
             this.button_8.UseVisualStyleBackColor = true;
+            this.button_8.Click += new System.EventHandler(this.button_8_Click);
             // 
             // button_7
             // 
@@ -664,6 +680,7 @@ namespace SQLiteXP
             this.button_7.TabIndex = 0;
             this.button_7.Text = "7";
             this.button_7.UseVisualStyleBackColor = true;
+            this.button_7.Click += new System.EventHandler(this.button_7_Click);
             // 
             // tableLayoutPanel12
             // 
@@ -707,6 +724,7 @@ namespace SQLiteXP
             this.button_point.TabIndex = 6;
             this.button_point.Text = ".";
             this.button_point.UseVisualStyleBackColor = true;
+            this.button_point.Click += new System.EventHandler(this.button_point_Click);
             // 
             // button_0
             // 
@@ -717,6 +735,7 @@ namespace SQLiteXP
             this.button_0.TabIndex = 5;
             this.button_0.Text = "0";
             this.button_0.UseVisualStyleBackColor = true;
+            this.button_0.Click += new System.EventHandler(this.button_0_Click);
             // 
             // tableLayoutPanel14
             // 
@@ -724,8 +743,8 @@ namespace SQLiteXP
             this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel14.Controls.Add(this.button_3, 0, 0);
-            this.tableLayoutPanel14.Controls.Add(this.button_2, 0, 0);
+            this.tableLayoutPanel14.Controls.Add(this.button_3, 2, 0);
+            this.tableLayoutPanel14.Controls.Add(this.button_2, 1, 0);
             this.tableLayoutPanel14.Controls.Add(this.button_1, 0, 0);
             this.tableLayoutPanel14.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel14.Location = new System.Drawing.Point(0, 0);
@@ -733,6 +752,7 @@ namespace SQLiteXP
             this.tableLayoutPanel14.Name = "tableLayoutPanel14";
             this.tableLayoutPanel14.RowCount = 1;
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
             this.tableLayoutPanel14.Size = new System.Drawing.Size(156, 29);
             this.tableLayoutPanel14.TabIndex = 1;
@@ -746,6 +766,7 @@ namespace SQLiteXP
             this.button_3.TabIndex = 6;
             this.button_3.Text = "3";
             this.button_3.UseVisualStyleBackColor = true;
+            this.button_3.Click += new System.EventHandler(this.button_3_Click);
             // 
             // button_2
             // 
@@ -756,6 +777,7 @@ namespace SQLiteXP
             this.button_2.TabIndex = 5;
             this.button_2.Text = "2";
             this.button_2.UseVisualStyleBackColor = true;
+            this.button_2.Click += new System.EventHandler(this.button_2_Click);
             // 
             // button_1
             // 
@@ -763,16 +785,115 @@ namespace SQLiteXP
             this.button_1.Location = new System.Drawing.Point(3, 3);
             this.button_1.Name = "button_1";
             this.button_1.Size = new System.Drawing.Size(46, 23);
-            this.button_1.TabIndex = 4;
+            this.button_1.TabIndex = 7;
             this.button_1.Text = "1";
             this.button_1.UseVisualStyleBackColor = true;
+            this.button_1.Click += new System.EventHandler(this.button_1_Click);
             // 
-            // textBox_uplata
+            // tableLayoutPanel15
             // 
-            this.textBox_uplata.Location = new System.Drawing.Point(535, 313);
-            this.textBox_uplata.Name = "textBox_uplata";
-            this.textBox_uplata.Size = new System.Drawing.Size(135, 22);
-            this.textBox_uplata.TabIndex = 7;
+            this.tableLayoutPanel15.ColumnCount = 3;
+            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35F));
+            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel15.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel15.Controls.Add(this.label2, 0, 1);
+            this.tableLayoutPanel15.Controls.Add(this.label3, 0, 2);
+            this.tableLayoutPanel15.Controls.Add(this.label10, 0, 3);
+            this.tableLayoutPanel15.Controls.Add(this.textBox_gotovina, 1, 0);
+            this.tableLayoutPanel15.Controls.Add(this.textBox_kartica, 1, 1);
+            this.tableLayoutPanel15.Controls.Add(this.textBox_virman, 1, 2);
+            this.tableLayoutPanel15.Controls.Add(this.textBox_cek, 1, 3);
+            this.tableLayoutPanel15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel15.Location = new System.Drawing.Point(535, 313);
+            this.tableLayoutPanel15.Name = "tableLayoutPanel15";
+            this.tableLayoutPanel15.RowCount = 4;
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 23.80952F));
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 26.19048F));
+            this.tableLayoutPanel15.Size = new System.Drawing.Size(223, 85);
+            this.tableLayoutPanel15.TabIndex = 7;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(63, 21);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Gotovina";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(3, 21);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(66, 21);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Kartica";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(3, 42);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(70, 20);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Virman";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(3, 62);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(43, 23);
+            this.label10.TabIndex = 3;
+            this.label10.Text = "Cek";
+            // 
+            // textBox_gotovina
+            // 
+            this.textBox_gotovina.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_gotovina.Enabled = false;
+            this.textBox_gotovina.Location = new System.Drawing.Point(81, 3);
+            this.textBox_gotovina.Name = "textBox_gotovina";
+            this.textBox_gotovina.Size = new System.Drawing.Size(83, 22);
+            this.textBox_gotovina.TabIndex = 4;
+            // 
+            // textBox_kartica
+            // 
+            this.textBox_kartica.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_kartica.Enabled = false;
+            this.textBox_kartica.Location = new System.Drawing.Point(81, 24);
+            this.textBox_kartica.Name = "textBox_kartica";
+            this.textBox_kartica.Size = new System.Drawing.Size(83, 22);
+            this.textBox_kartica.TabIndex = 5;
+            // 
+            // textBox_virman
+            // 
+            this.textBox_virman.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_virman.Enabled = false;
+            this.textBox_virman.Location = new System.Drawing.Point(81, 45);
+            this.textBox_virman.Name = "textBox_virman";
+            this.textBox_virman.Size = new System.Drawing.Size(83, 22);
+            this.textBox_virman.TabIndex = 6;
+            // 
+            // textBox_cek
+            // 
+            this.textBox_cek.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_cek.Enabled = false;
+            this.textBox_cek.Location = new System.Drawing.Point(81, 65);
+            this.textBox_cek.Name = "textBox_cek";
+            this.textBox_cek.Size = new System.Drawing.Size(83, 22);
+            this.textBox_cek.TabIndex = 7;
             // 
             // BillControl
             // 
@@ -794,7 +915,6 @@ namespace SQLiteXP
             this.tableLayoutPanel8.ResumeLayout(false);
             this.tableLayoutPanel8.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
             this.tableLayoutPanel5.ResumeLayout(false);
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
@@ -803,6 +923,8 @@ namespace SQLiteXP
             this.tableLayoutPanel12.ResumeLayout(false);
             this.tableLayoutPanel13.ResumeLayout(false);
             this.tableLayoutPanel14.ResumeLayout(false);
+            this.tableLayoutPanel15.ResumeLayout(false);
+            this.tableLayoutPanel15.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -858,8 +980,16 @@ namespace SQLiteXP
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel14;
         private System.Windows.Forms.Button button_3;
         private System.Windows.Forms.Button button_2;
-        private System.Windows.Forms.Button button_1;
         private System.Windows.Forms.Button button_uplata;
-        private System.Windows.Forms.TextBox textBox_uplata;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel15;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox textBox_gotovina;
+        private System.Windows.Forms.TextBox textBox_kartica;
+        private System.Windows.Forms.TextBox textBox_virman;
+        private System.Windows.Forms.TextBox textBox_cek;
+        private System.Windows.Forms.Button button_1;
     }
 }

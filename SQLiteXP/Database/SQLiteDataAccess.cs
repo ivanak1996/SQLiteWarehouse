@@ -124,6 +124,20 @@ namespace SQLiteXP.Database
             }
         }
 
+        internal static void UpdateBill(Bill bill)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
+            {
+                //dateCreated datetime, status varchar(20), year integer, docType varchar(4), ordinaryNumber integer,
+                //cek float, kartica float, gotovina float, virman float, uplaceno float, povracaj float, iznos float, popust float)";
+                
+                cnn.Execute($"update Bill " +
+                    $"set cek={bill.cek}, kartica={bill.kartica}, gotovina={bill.gotovina}, " +
+                    $"virman={bill.virman}, uplaceno={bill.uplaceno}, povracaj={bill.povracaj}, iznos={bill.iznos}, popust={bill.popust} " +
+                    $"where id={bill.Id}", new DynamicParameters());
+            }
+        }
+
         internal static Bill CreateNewBill(int year, string docType)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
@@ -360,7 +374,8 @@ namespace SQLiteXP.Database
                     cmd.ExecuteNonQuery();
 
                     cmd.CommandText = @" CREATE TABLE IF NOT EXISTS Bill (id INTEGER PRIMARY KEY NOT NULL, 
-                    dateCreated datetime, status varchar(20), year integer, docType varchar(4), ordinaryNumber integer)";
+                    dateCreated datetime, status varchar(20), year integer, docType varchar(4), ordinaryNumber integer,
+                    cek float, kartica float, gotovina float, virman float, uplaceno float, povracaj float, iznos float, popust float)";
                     cmd.ExecuteNonQuery();
 
                     cmd.CommandText = "DROP TABLE IF EXISTS BillItem";
@@ -370,8 +385,11 @@ namespace SQLiteXP.Database
                     productIdent int, productCena float, productPopust float,productSifra VARCHAR(16), productNaziv VARCHAR(250), productJM VARCHAR(10), 
                     productBarkod VARCHAR(50), productPdv float , 
                     Quantity float, billId int)";
-                    cmd.ExecuteNonQuery();                
+                    cmd.ExecuteNonQuery();
 
+                    cmd.CommandText = @" CREATE TABLE IF NOT EXISTS Zaglavlje (id INTEGER PRIMARY KEY NOT NULL, 
+                    billId int, cek float, kartica float, gotovina float, virman float, uplaceno float, povracaj float, iznos float, popust float)";
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
