@@ -206,7 +206,14 @@ namespace SQLiteXP
             {
                 if (sifraProizvoda_textBox.Text == string.Empty)
                 {
+                    // fokus na gotovinu i popuni iznos
+                    float iznos = currentBill.TotalPrice();
+                    float toAdd = iznos - currentBill.uplaceno;
+                    currentBill.gotovina += toAdd;
+                    textBox_gotovina.Text = currentBill.gotovina.ToString("0.00");
                     textBox_gotovina.Focus();
+                    textBox_gotovina.SelectionStart = 0;
+                    textBox_gotovina.SelectionLength = textBox_gotovina.Text.Length;
                     return;
                 }
                 else
@@ -439,6 +446,8 @@ namespace SQLiteXP
 
                     totalPrice += itemTotalPrice;
                 }
+                currentBill.povracaj = currentBill.uplaceno - totalPrice;
+                textBox_povracaj.Text = currentBill.povracaj.ToString("0.00");
             }
             uplata_textBox1.Text = totalPrice.ToString("0.00");
         }
