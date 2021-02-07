@@ -72,10 +72,14 @@ namespace SQLiteXP.Models.Billing
         public void AddItem(BillItem item)
         {
             BillItem existingItem = Items.FirstOrDefault(i => i.productIdent == item.productIdent);
-            if (existingItem == null && item.Quantity > 0)
+
+            if (existingItem == null)
             {
-                Items.Add(item);
-                SQLiteDataAccess.InsertBillItem(item);
+                if (item.Quantity > 0)
+                {
+                    Items.Add(item);
+                    SQLiteDataAccess.InsertBillItem(item);
+                }                
             }
             else
             {                

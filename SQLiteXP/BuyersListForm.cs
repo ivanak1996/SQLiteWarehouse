@@ -1,5 +1,6 @@
 ﻿using SQLiteXP.Models;
 using SQLiteXP.Service;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
@@ -53,8 +54,20 @@ namespace SQLiteXP
             }
 
             dataGridView_buyers.DataSource = buyersTable;
+            dataGridView_buyers.CellDoubleClick += DataGridView_CellDoubleClick;
             dataGridView_buyers.ReadOnly = true;
         }
 
+        private void DataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+        }
+
+        internal string GetSelectedBuyer()
+        {
+            return dataGridView_buyers.SelectedCells.Count > 0
+                ? dataGridView_buyers.Rows[dataGridView_buyers.SelectedCells[0].RowIndex].Cells["Sifra"].Value.ToString()
+                : string.Empty;
+        }
     }
 }
