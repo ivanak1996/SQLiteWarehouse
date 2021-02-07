@@ -144,5 +144,10 @@ namespace SQLiteXP.Service
         {
             return SQLiteDataAccess.CreateNewBill(year, docType);
         }
+
+        internal static void DeleteBill(Bill bill)
+        {
+            SQLiteDataAccess.DeleteBill(bill);
+        }
     }
 }

@@ -124,6 +124,17 @@ namespace SQLiteXP.Database
             }
         }
 
+        internal static void DeleteBill(Bill bill)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
+            {
+                cnn.Execute($"delete from Bill " +
+                    $"where Id={bill.Id}", new DynamicParameters());
+                cnn.Execute($"delete from BillItem " +
+                    $"where billId={bill.Id}", new DynamicParameters());
+            }
+        }
+
         internal static void UpdateBill(Bill bill)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))

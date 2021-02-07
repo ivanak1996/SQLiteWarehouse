@@ -22,3 +22,4 @@ C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.StockListForm.r
 C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.EditBillItemDialog.resources
 C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.BillControl.resources
 C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.TotalPricesDialog.resources
+C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.TestForm.resources
