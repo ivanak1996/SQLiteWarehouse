@@ -8,7 +8,7 @@ namespace SQLiteXP.Models.Billing
     public class Bill
     {
         public const string STATUS_OPEN = "Open";
-        public const string STATUS_COMPLETE = "Complete";
+        public const string STATUS_FISKALIZOVAN = "Fiskalizovan";
 
         public DateTime DateCreated { get; set; } = DateTime.Now;
         public string Status { get; set; }
@@ -116,6 +116,11 @@ namespace SQLiteXP.Models.Billing
         public void Save()
         {
             SQLiteDataAccess.UpdateBill(this);
+        }
+
+        internal void Fiskalizuj()
+        {
+            SQLiteDataAccess.Fiskalizuj(this);
         }
     }
 }

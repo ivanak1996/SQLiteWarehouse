@@ -8,6 +8,7 @@ using System.Linq;
 using System;
 using SQLiteXP.Models;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace SQLiteXP
 {
@@ -32,6 +33,12 @@ namespace SQLiteXP
         private const string DELETE_BILL_MESSAGE = "Da li ste sigurni da zelite da obrisete racun?";
         private const string DELETE_BILL_TITLE = "Brisanje racuna";
 
+        public static string ConvertDateTimeToDate(DateTime dt, string formatSpecifier, string langCulture)
+        {
+            CultureInfo culture = new CultureInfo(langCulture);
+            return dt.ToString(formatSpecifier, culture);
+        }
+
         private void SelectBill(int index)
         {
             billSelectionInProgress = true;
@@ -41,6 +48,18 @@ namespace SQLiteXP
             button_previousBill.Enabled = index != 0;
             button_nextBill.Enabled = index != bills.Count - 1;
             label_billNumber.Text = currentBill.GetBillNumber();
+
+            if(currentBill.Status == Bill.STATUS_FISKALIZOVAN)
+            {
+                label_datum.Text = ConvertDateTimeToDate(currentBill.DateCreated, "dddd, d. MMMM, yyyy. hh:mm", "sr-Latn-RS");
+                checkBox_fiskalizovan.Checked = true;
+            }
+            else
+            {
+                label_datum.Text = ConvertDateTimeToDate(currentBill.DateCreated, "dddd, d. MMMM, yyyy.", "sr-Latn-RS");
+                checkBox_fiskalizovan.Checked = false;
+            }
+
             PopulateBillItemsTable();
             PopulateTotalPrices();
             billSelectionInProgress = false;
@@ -53,6 +72,8 @@ namespace SQLiteXP
             button_previousBill.Enabled = false;
             button_nextBill.Enabled = false;
             label_billNumber.Text = string.Empty;
+            checkBox_fiskalizovan.Checked = false;
+            label_datum.Text = string.Empty;
             PopulateBillItemsTable();
             PopulateTotalPrices();
         }
@@ -648,6 +669,11 @@ namespace SQLiteXP
         }
         private void button_newBill_Click(object sender, EventArgs e)
         {
+            createNewBill();
+        }
+
+        private void createNewBill()
+        {
             Bill bill = WarehouseService.CreateNewBill(DateTime.Now.Year % 100, docType);
             bills.Add(bill);
             SelectBill(bills.Count - 1);
@@ -656,6 +682,14 @@ namespace SQLiteXP
         private void button_fiskalizacija_Click(object sender, EventArgs e)
         {
             // TODO
+            // 1. status fiskalizovan 2. vreme 3. novi racun
+            if(currentBill!=null && currentBill.Status != Bill.STATUS_FISKALIZOVAN)
+            {
+                currentBill.Status = Bill.STATUS_FISKALIZOVAN;
+                currentBill.DateCreated = DateTime.Now;
+                currentBill.Fiskalizuj();
+                createNewBill();
+            }
         }
 
         private void button_SearchBuyers_Click(object sender, EventArgs e)
@@ -708,5 +742,6 @@ namespace SQLiteXP
                 return;
             }                    
         }
+
     }
 }

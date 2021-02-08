@@ -103,7 +103,7 @@ namespace SQLiteXP.Database
                 var query = GetGenericQueryString(billItem);
                 cnn.Execute(query, billItem);
             }
-        }
+        }  
 
         internal static void DeleteItem(BillItem item)
         {
@@ -132,6 +132,16 @@ namespace SQLiteXP.Database
                     $"where Id={bill.Id}", new DynamicParameters());
                 cnn.Execute($"delete from BillItem " +
                     $"where billId={bill.Id}", new DynamicParameters());
+            }
+        }
+
+        internal static void Fiskalizuj(Bill bill)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
+            {
+                cnn.Execute($"update Bill " +
+                    $"set dateCreated='{bill.DateCreated:yyyy-MM-dd HH:mm:ss.fff}', status='{bill.Status}' " +
+                    $"where id={bill.Id}", new DynamicParameters());
             }
         }
 
