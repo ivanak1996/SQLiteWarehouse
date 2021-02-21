@@ -33,8 +33,8 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.comboBox_searchColumn = new System.Windows.Forms.ComboBox();
             this.textBox_searchCriteria = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.button1 = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_products)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
@@ -109,18 +109,6 @@
             this.textBox_searchCriteria.Size = new System.Drawing.Size(337, 38);
             this.textBox_searchCriteria.TabIndex = 1;
             // 
-            // button1
-            // 
-            this.button1.BackgroundImage = global::SQLiteXP.Properties.Resources.search_icon1;
-            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.button1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button1.Location = new System.Drawing.Point(596, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(44, 38);
-            this.button1.TabIndex = 2;
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
             // tableLayoutPanel6
             // 
             this.tableLayoutPanel6.ColumnCount = 4;
@@ -135,6 +123,18 @@
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel6.Size = new System.Drawing.Size(353, 38);
             this.tableLayoutPanel6.TabIndex = 4;
+            // 
+            // button1
+            // 
+            this.button1.BackgroundImage = global::SQLiteXP.Properties.Resources.search_icon1;
+            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.button1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button1.Location = new System.Drawing.Point(596, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(44, 38);
+            this.button1.TabIndex = 2;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // ProductListForm
             // 

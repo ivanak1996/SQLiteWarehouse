@@ -27,6 +27,7 @@ namespace SQLiteXP.Models.Billing
         public float povracaj { get; set; }
         public float iznos { get; set; }
         public float popust { get; set; }
+        public string sifraKupca { get; set; }
 
         private bool itemsLoaded = false;
 
@@ -121,6 +122,14 @@ namespace SQLiteXP.Models.Billing
         internal void Fiskalizuj()
         {
             SQLiteDataAccess.Fiskalizuj(this);
+        }
+
+        internal void UpdateBuyer(string sifra)
+        {
+            if (sifra != sifraKupca) {
+                sifraKupca = sifra;
+                SQLiteDataAccess.UpdateSifraKupca(this);
+            }
         }
     }
 }

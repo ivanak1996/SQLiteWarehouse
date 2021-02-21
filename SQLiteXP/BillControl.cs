@@ -9,6 +9,7 @@ using System;
 using SQLiteXP.Models;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using SQLiteXP.Database;
 
 namespace SQLiteXP
 {
@@ -25,13 +26,18 @@ namespace SQLiteXP
         private TextBox lastFocusedTextBox;
         private bool billSelectionInProgress = false;
 
-        private const string quantityInSifraTextBox = @"^\+[0-9]\d*(\.\d+)?$";
+        private const string quantityInSifraTextBox = @"^(\+|\-)[0-9]\d*(\.\d+)?$";
         private const string ERROR_BUYER_WITH_PIB_DOES_NOT_EXIST = "Kupac sa unetim PIB-om ne postoji";
         private const string ERROR_BUYER_WITH_ID_DOES_NOT_EXIST = "Kupac sa unetim maticnim brojem ne postoji";
         private const string ERROR_WRONG_SIFRA_PROIZVODA = "Pogresno uneta sifra proizvoda";
         private const string WARNING = "Obavestenje";
         private const string DELETE_BILL_MESSAGE = "Da li ste sigurni da zelite da obrisete racun?";
         private const string DELETE_BILL_TITLE = "Brisanje racuna";
+        private const string DATE_TIME_FORMAT_SPECIFIER_FISKALIZOVAN = "dd.MM.yyyy. hh:mm";
+        private const string DATE_TIME_FORMAT_SPECIFIER_NEFISKALIZOVAN = "dd.MM.yyyy.";
+        private const string DEFAULT_LANGUAGE_CULTURE = "sr-Latn-RS";
+        private const string FISKALIZACIJA_MESSAGE = "Da li zelite da fiskalizujete racun";
+        private const string FISKALIZACIJA_TITLE = "Fiskalizacija";
 
         public static string ConvertDateTimeToDate(DateTime dt, string formatSpecifier, string langCulture)
         {
@@ -51,13 +57,18 @@ namespace SQLiteXP
 
             if(currentBill.Status == Bill.STATUS_FISKALIZOVAN)
             {
-                label_datum.Text = ConvertDateTimeToDate(currentBill.DateCreated, "dddd, d. MMMM, yyyy. hh:mm", "sr-Latn-RS");
+                label_datum.Text = ConvertDateTimeToDate(currentBill.DateCreated, DATE_TIME_FORMAT_SPECIFIER_FISKALIZOVAN, DEFAULT_LANGUAGE_CULTURE);
                 checkBox_fiskalizovan.Checked = true;
             }
             else
             {
-                label_datum.Text = ConvertDateTimeToDate(currentBill.DateCreated, "dddd, d. MMMM, yyyy.", "sr-Latn-RS");
+                label_datum.Text = ConvertDateTimeToDate(currentBill.DateCreated, DATE_TIME_FORMAT_SPECIFIER_NEFISKALIZOVAN, DEFAULT_LANGUAGE_CULTURE);
                 checkBox_fiskalizovan.Checked = false;
+            }
+            int buyersIndexToSelect = buyers.FindIndex(b => b.sifra == currentBill.sifraKupca);
+            if (buyersIndexToSelect != -1)
+            {
+                comboBox_kupci.SelectedIndex = buyersIndexToSelect;
             }
 
             PopulateBillItemsTable();
@@ -165,8 +176,15 @@ namespace SQLiteXP
             textBox_virman.TextChanged += TextBoxPrices_TextChanged;
         }
 
+        private bool fiskalizovan()
+        {
+            return currentBill != null && currentBill.Status == Bill.STATUS_FISKALIZOVAN;
+        }
+
         private void TextBoxPrices_KeyPress(object sender, KeyPressEventArgs e)
         {
+            if(fiskalizovan()) return;
+
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
             {
                 e.Handled = true;
@@ -182,6 +200,8 @@ namespace SQLiteXP
 
         private void TextBoxPrices_TextChanged(object sender, EventArgs e)
         {
+            if (fiskalizovan()) return;
+
             if (currentBill != null && billSelectionInProgress == false)
             {
                 CalculatePrices(currentBill.TotalPrice());
@@ -207,6 +227,10 @@ namespace SQLiteXP
             textBox_kupacGrad.Text = buyers[index].grad;
             textBox_PIB.Text = buyers[index].pib.Trim(' ');
             textBox_maticniBr.Text = buyers[index].maticniBroj.Trim(' ');
+            if (currentBill != null)
+            {
+                currentBill.UpdateBuyer(buyers[index].sifra);
+            }
         }
 
         private void UplataKeyUp(object sender, KeyEventArgs e)
@@ -223,6 +247,8 @@ namespace SQLiteXP
 
         private void AddToBillOnEnter()
         {
+            if (fiskalizovan()) return;
+            if (currentBill == null) return;
             if (quantity_textBox1.Text == string.Empty)
             {
                 if (sifraProizvoda_textBox.Text == string.Empty)
@@ -244,6 +270,13 @@ namespace SQLiteXP
             }           
 
             string selectedProductSifra = sifraProizvoda_textBox.Text;
+
+            if(selectedProductSifra == string.Empty)
+            {
+                sifraProizvoda_textBox.Focus();
+                return;
+            }
+
             Products selectedProduct = products.FirstOrDefault(products => products.sifra == selectedProductSifra);
             if (selectedProduct != null)
             {
@@ -292,7 +325,9 @@ namespace SQLiteXP
                 {
                     if (Regex.IsMatch(sifraProizvoda_textBox.Text, quantityInSifraTextBox))
                     {
-                        string quantity = sifraProizvoda_textBox.Text.Substring(1);
+                        string quantity = (sifraProizvoda_textBox.Text[0] == '-') 
+                            ? sifraProizvoda_textBox.Text 
+                            : sifraProizvoda_textBox.Text.Substring(1);
                         quantity_textBox1.Text = quantity;
                         sifraProizvoda_textBox.Clear();
                         sifraProizvoda_textBox.Focus();
@@ -394,6 +429,7 @@ namespace SQLiteXP
 
         private void dataGridView_Brisanje_KeyDown(object sender, KeyEventArgs e)
         {
+            if (fiskalizovan()) return;
             if (e.KeyCode == Keys.Delete)
             {
                 if (e.Modifiers == Keys.Control && dataGridView_billItems.SelectedRows.Count > 0
@@ -415,6 +451,7 @@ namespace SQLiteXP
 
         private void DataGridView1_CellDoubleClick(Object sender, DataGridViewCellMouseEventArgs e)
         {
+            if (fiskalizovan()) return;
             ShowMyDialogBox();
         }
 
@@ -475,7 +512,7 @@ namespace SQLiteXP
 
         private void button_uplata_Click_1(object sender, EventArgs e)
         {
-            
+            if (fiskalizovan()) return;
             TotalPricesDialog dialog = new TotalPricesDialog(currentBill);
 
             if (dialog.ShowDialog(this) == DialogResult.OK)
@@ -560,7 +597,7 @@ namespace SQLiteXP
 
         private void button_backspace_Click(object sender, EventArgs e)
         {
-            if (lastFocusedTextBox != null && float.TryParse(lastFocusedTextBox.Text, out float value))
+            if (lastFocusedTextBox != null && lastFocusedTextBox.Text.Length > 0)
             {
                 if (lastFocusedTextBox.SelectionLength > 0)
                 {
@@ -578,7 +615,23 @@ namespace SQLiteXP
 
         private void button_enter_Click(object sender, EventArgs e)
         {
-            if (lastFocusedTextBox == sifraProizvoda_textBox || lastFocusedTextBox == quantity_textBox1)
+            if (fiskalizovan()) return;
+            if (lastFocusedTextBox == sifraProizvoda_textBox)
+            {
+                if (Regex.IsMatch(sifraProizvoda_textBox.Text, quantityInSifraTextBox))
+                {
+                    string quantity = (sifraProizvoda_textBox.Text[0] == '-')
+                            ? sifraProizvoda_textBox.Text
+                            : sifraProizvoda_textBox.Text.Substring(1);
+                    quantity_textBox1.Text = quantity;
+                    sifraProizvoda_textBox.Clear();
+                    sifraProizvoda_textBox.Focus();
+                }
+                else
+                {
+                    AddToBillOnEnter();
+                }
+            } else if (lastFocusedTextBox == quantity_textBox1)
             {
                 AddToBillOnEnter();
             }
@@ -608,7 +661,8 @@ namespace SQLiteXP
 
         private bool CalculatePrices(float iznos)
         {
-           if(!float.TryParse(textBox_cek.Text, out float cek) && !(textBox_cek.Text == string.Empty)
+            if (fiskalizovan()) return false;
+            if (!float.TryParse(textBox_cek.Text, out float cek) && !(textBox_cek.Text == string.Empty)
                 || !float.TryParse(textBox_virman.Text, out float virman) && !(textBox_virman.Text == string.Empty)
                 || !float.TryParse(textBox_kartica.Text, out float kartica) && !(textBox_kartica.Text == string.Empty)
                 || !float.TryParse(textBox_gotovina.Text, out float gotovina) && !(textBox_gotovina.Text == string.Empty))
@@ -636,6 +690,7 @@ namespace SQLiteXP
         {
             if (currentBill != null)
             {
+                if (fiskalizovan()) return;
                 float iznos = currentBill.TotalPrice();
                 float toAdd = iznos - currentBill.uplaceno;
                 if (toAdd > 0 && sender is TextBox)
@@ -681,15 +736,29 @@ namespace SQLiteXP
 
         private void button_fiskalizacija_Click(object sender, EventArgs e)
         {
-            // TODO
-            // 1. status fiskalizovan 2. vreme 3. novi racun
-            if(currentBill!=null && currentBill.Status != Bill.STATUS_FISKALIZOVAN)
+            if (bills.Count == 0) return;
+            if (currentBill != null && currentBill.Status != Bill.STATUS_FISKALIZOVAN)
             {
-                currentBill.Status = Bill.STATUS_FISKALIZOVAN;
-                currentBill.DateCreated = DateTime.Now;
-                currentBill.Fiskalizuj();
-                createNewBill();
+                if(Math.Round(currentBill.povracaj, 2) < 0.0)
+                {
+                    button_fiskalizacija.Enabled = false;
+                    return;
+                }
+
+                DialogResult dialogResult = MessageBox.Show(FISKALIZACIJA_MESSAGE, FISKALIZACIJA_TITLE, MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    currentBill.Status = Bill.STATUS_FISKALIZOVAN;
+                    currentBill.DateCreated = DateTime.Now;
+                    currentBill.Fiskalizuj();
+                    createNewBill();
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    return;
+                }
             }
+            
         }
 
         private void button_SearchBuyers_Click(object sender, EventArgs e)
@@ -715,10 +784,7 @@ namespace SQLiteXP
 
         private void button_deleteBill_Click(object sender, EventArgs e)
         {
-            if (bills.Count == 0)
-            {
-                return;
-            }
+            if (bills.Count == 0) return;
 
             DialogResult dialogResult = MessageBox.Show(DELETE_BILL_MESSAGE, DELETE_BILL_TITLE, MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
@@ -743,5 +809,37 @@ namespace SQLiteXP
             }                    
         }
 
+        private void KeyboardSymbolHandler(char symbol)
+        {
+            if (lastFocusedTextBox == quantity_textBox1 
+                || lastFocusedTextBox == sifraProizvoda_textBox)
+            {
+                if (lastFocusedTextBox.Text != string.Empty) return;
+                lastFocusedTextBox.Text += symbol;
+            }
+        }
+
+        private void button_plus_Click(object sender, EventArgs e)
+        {
+            KeyboardSymbolHandler('+');
+        }
+
+        private void button_minus_Click(object sender, EventArgs e)
+        {
+            KeyboardSymbolHandler('-');
+        }
+
+        private void button_blagajna_Click(object sender, EventArgs e)
+        {
+            BlagajnaDetailsModel blagajna = SQLiteDataAccess.GetBlagajnaFiskalizovaniData();
+            BlagajnaDialog testDialog = new BlagajnaDialog(blagajna);
+
+            // Show testDialog as a modal dialog and determine if DialogResult = OK.
+            if (testDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                // TODO implement
+            }
+            testDialog.Dispose();
+        }
     }
 }

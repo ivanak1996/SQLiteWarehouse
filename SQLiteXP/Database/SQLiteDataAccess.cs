@@ -145,6 +145,16 @@ namespace SQLiteXP.Database
             }
         }
 
+        internal static void UpdateSifraKupca(Bill bill)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
+            {
+                cnn.Execute($"update Bill " +
+                    $"set sifraKupca='{bill.sifraKupca}' " +
+                    $"where id={bill.Id}", new DynamicParameters());
+            }
+        }
+
         internal static void UpdateBill(Bill bill)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
@@ -156,6 +166,46 @@ namespace SQLiteXP.Database
                     $"set cek={bill.cek}, kartica={bill.kartica}, gotovina={bill.gotovina}, " +
                     $"virman={bill.virman}, uplaceno={bill.uplaceno}, povracaj={bill.povracaj}, iznos={bill.iznos}, popust={bill.popust} " +
                     $"where id={bill.Id}", new DynamicParameters());
+            }
+        }
+
+        internal static BlagajnaDetailsModel GetBlagajnaFiskalizovaniData()
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadWarehouseConnectionString()))
+            {
+                string sqlFiskalizovan = @"SELECT SUM(uplaceno), sum(virman), sum(kartica), sum(cek), sum(gotovina) 
+                                FROM Bill 
+                                WHERE status='Fiskalizovan'";
+
+                var result = cnn.ExecuteReader(sqlFiskalizovan, new DynamicParameters());
+
+                BlagajnaDetailsModel blagajna = new BlagajnaDetailsModel();
+
+                while (result.Read())
+                {
+                    blagajna.uplaceno = float.TryParse(result[0].ToString(), out float uplaceno) ? uplaceno : 0;
+                    blagajna.virman = float.TryParse(result[1].ToString(), out float virman) ? virman : 0;
+                    blagajna.kartica = float.TryParse(result[2].ToString(), out float kartica) ? kartica : 0;
+                    blagajna.cek = float.TryParse(result[3].ToString(), out float cek) ? cek : 0;
+                    blagajna.gotovina = float.TryParse(result[4].ToString(), out float gotovina) ? gotovina : 0;
+                }
+
+                string sqlNefiskalizovan = @"SELECT SUM(uplaceno), sum(virman), sum(kartica), sum(cek), sum(gotovina) 
+                                FROM Bill 
+                                WHERE status!='Fiskalizovan'";
+
+                result = cnn.ExecuteReader(sqlNefiskalizovan, new DynamicParameters());
+
+                while (result.Read())
+                {
+                    blagajna.uplacenoNefiskalizovan = float.TryParse(result[0].ToString(), out float uplacenoNefiskalizovan) ? uplacenoNefiskalizovan : 0;
+                    blagajna.virmanNefiskalizovan = float.TryParse(result[1].ToString(), out float virmanNefiskalizovan) ? virmanNefiskalizovan : 0;
+                    blagajna.karticaNefiskalizovan = float.TryParse(result[2].ToString(), out float karticaNefiskalizovan) ? karticaNefiskalizovan : 0;
+                    blagajna.cekNefiskalizovan = float.TryParse(result[3].ToString(), out float cekNefiskalizovan) ? cekNefiskalizovan : 0;
+                    blagajna.gotovinaNefiskalizovan = float.TryParse(result[4].ToString(), out float gotovinaNefiskalizovan) ? gotovinaNefiskalizovan : 0;
+                }
+
+                return blagajna;
             }
         }
 
@@ -394,7 +444,7 @@ namespace SQLiteXP.Database
                     cmd.CommandText = "DROP TABLE IF EXISTS Bill";
                     cmd.ExecuteNonQuery();
 
-                    cmd.CommandText = @" CREATE TABLE IF NOT EXISTS Bill (id INTEGER PRIMARY KEY NOT NULL, 
+                    cmd.CommandText = @" CREATE TABLE IF NOT EXISTS Bill (id INTEGER PRIMARY KEY NOT NULL, sifraKupca VARCHAR(50),
                     dateCreated datetime, status varchar(20), year integer, docType varchar(4), ordinaryNumber integer,
                     cek float, kartica float, gotovina float, virman float, uplaceno float, povracaj float, iznos float, popust float)";
                     cmd.ExecuteNonQuery();
@@ -408,7 +458,7 @@ namespace SQLiteXP.Database
                     Quantity float, billId int)";
                     cmd.ExecuteNonQuery();
 
-                    cmd.CommandText = @" CREATE TABLE IF NOT EXISTS Zaglavlje (id INTEGER PRIMARY KEY NOT NULL, 
+                    cmd.CommandText = @" CREATE TABLE IF NOT EXISTS Zaglavlje (id INTEGER PRIMARY KEY NOT NULL,
                     billId int, cek float, kartica float, gotovina float, virman float, uplaceno float, povracaj float, iznos float, popust float)";
                     cmd.ExecuteNonQuery();
                 }

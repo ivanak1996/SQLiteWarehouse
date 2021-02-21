@@ -23,3 +23,4 @@ C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.EditBillItemDia
 C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.BillControl.resources
 C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.TotalPricesDialog.resources
 C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.TestForm.resources
+C:\Users\ivana\source\repos\SQLiteXP\SQLiteXP\obj\Debug\SQLiteXP.BlagajnaDialog.resources

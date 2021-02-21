@@ -60,6 +60,12 @@
     <Compile Include="BillControl.Designer.cs">
       <DependentUpon>BillControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="BlagajnaDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BlagajnaDialog.Designer.cs">
+      <DependentUpon>BlagajnaDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="BuyersListForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +90,7 @@
     </Compile>
     <Compile Include="Models\Billing\Bill.cs" />
     <Compile Include="Models\Billing\BillItem.cs" />
+    <Compile Include="Models\BlagajnaDetailsModel.cs" />
     <Compile Include="Models\DocHeader.cs" />
     <Compile Include="Models\DocItems.cs" />
     <Compile Include="Models\StockWithProductInfo.cs" />
@@ -124,6 +131,9 @@
     <Compile Include="Web\JSONParser.cs" />
     <EmbeddedResource Include="BillControl.resx">
       <DependentUpon>BillControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BlagajnaDialog.resx">
+      <DependentUpon>BlagajnaDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="BuyersListForm.resx">
       <DependentUpon>BuyersListForm.cs</DependentUpon>
